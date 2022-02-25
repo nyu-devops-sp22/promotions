@@ -2,8 +2,25 @@
 Models for Promotion
 
 All of the models are stored in this module
+
+Models
+------
+Promotion - A Promotion used in the e-commerce service
+
+Attributes:
+-----------
+name (string) - the name of the promotion
+code (string) - the code that identifies the promotion
+start_date (string) - the date the promotion starts
+end_date (string) - the date the promotion ends (can be null)
+type - the promotion type (value off, percentage off etc.)
+value (number) - the discounted value the promotion applies to products
+ongoing (boolean) - True for promotions that are ongoing
+
 """
 import logging
+from enum import Enum
+from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
 logger = logging.getLogger("flask.app")
@@ -11,12 +28,21 @@ logger = logging.getLogger("flask.app")
 # Create the SQLAlchemy object to be initialized later in init_db()
 db = SQLAlchemy()
 
+def init_db(app):
+    """Initialize the SQLAlchemy app"""
+    Promotion.init_db(app)
 
 class DataValidationError(Exception):
     """ Used for an data validation errors when deserializing """
 
     pass
 
+class Type(Enum):
+    """Enumeration of valid Promotion Types"""
+
+    Value = 0 # $10 off, $20 off etc.
+    Percentage = 1 # 10% off, 20% off etc.
+    Unknown = 3
 
 class Promotion(db.Model):
     """
@@ -25,9 +51,15 @@ class Promotion(db.Model):
 
     app = None
 
+    ##################################################
     # Table Schema
+    ##################################################
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(63))
+    name = db.Column(db.String(63), nullable=False)
+
+    ##################################################
+    # INSTANCE METHODS
+    ##################################################
 
     def __repr__(self):
         return "<Promotion %r id=[%s]>" % (self.name, self.id)
@@ -41,7 +73,7 @@ class Promotion(db.Model):
         db.session.add(self)
         db.session.commit()
 
-    def save(self):
+    def update(self):
         """
         Updates a Promotion to the database
         """
@@ -77,11 +109,19 @@ class Promotion(db.Model):
             )
         return self
 
+    ##################################################
+    # CLASS METHODS
+    ##################################################
+
     @classmethod
-    def init_db(cls, app):
-        """ Initializes the database session """
+    def init_db(cls, app: Flask):
+        """Initializes the database session
+
+        :param app: the Flask app
+        :type data: Flask
+
+        """
         logger.info("Initializing database")
-        cls.app = app
         # This is where we initialize SQLAlchemy from the Flask app
         db.init_app(app)
         app.app_context().push()

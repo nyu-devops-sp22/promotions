@@ -4,7 +4,6 @@ Package for the application models and service routes
 This module creates and configures the Flask app and sets up the logging
 and SQL database
 """
-import os
 import sys
 import logging
 from flask import Flask
@@ -17,6 +16,8 @@ app.config.from_object("config")
 from service import routes, models, error_handlers
 
 # Set up logging for production
+print("Setting up logging for {}...".format(__name__))
+app.logger.propagate = False
 if __name__ != "__main__":
     gunicorn_logger = logging.getLogger("gunicorn.error")
     app.logger.handlers = gunicorn_logger.handlers
@@ -31,7 +32,7 @@ if __name__ != "__main__":
     app.logger.info("Logging handler established")
 
 app.logger.info(70 * "*")
-app.logger.info("  M Y   S E R V I C E   R U N N I N G  ".center(70, "*"))
+app.logger.info("  P R O M O T I O N   S E R V I C E   R U N N I N G  ".center(70, "*"))
 app.logger.info(70 * "*")
 
 try:
