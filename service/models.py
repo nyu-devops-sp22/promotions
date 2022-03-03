@@ -12,8 +12,8 @@ Attributes:
 id (int) - the id of the promotion
 name (string) - the name of the promotion
 code (string) - the code that identifies the promotion
-start_date (string) - the date the promotion starts
-end_date (string) - the date the promotion ends (can be null)
+start_date (datetime) - the date the promotion starts
+end_date (datetime) - the date the promotion ends (can be null)
 type - the promotion type (value off, percentage off etc.)
 value (number) - the discounted value the promotion applies to products
 ongoing (boolean) - True for promotions that are ongoing
@@ -64,7 +64,7 @@ According to flask documentation:
 "If you want to use many-to-many relationships you will need to define a helper table that is used for the relationship.
 For this helper table it is strongly recommended to not use a model but an actual table"
 """
-products = db.Table('tags',
+products = db.Table('products',
     db.Column('product_id', db.Integer, db.ForeignKey('product.id'), primary_key=True),
     db.Column('promotion_id', db.Integer, db.ForeignKey('promotion.id'), primary_key=True)
 )

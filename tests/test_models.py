@@ -47,6 +47,9 @@ class TestPromotion(unittest.TestCase):
         self.assertEqual(promo.name, "Summer Sale")
         self.assertEqual(promo.products, [])
         self.assertTrue(promo is not None)
+        prod = Product(name="bicycle", price=99.99, units=100)
+        promo.products.append(prod)
+        self.assertEqual(len(promo.products), 1)
 
     def test_create_a_product(self):
         """ Create a product and assert that it can be instantiated"""
@@ -60,6 +63,8 @@ class TestPromotion(unittest.TestCase):
         promotions = Promotion.all()
         self.assertEqual(promotions, [])
         promo = Promotion(name="Summer Sale", start_date=datetime.now(), type=Type.Percentage, value=0.2, ongoing=False)
+        prod = Product(name="bicycle", price=99.99, units=100)
+        promo.products.append(prod)
         self.assertTrue(promo is not None)
         self.assertEqual(promo.id, None)
         promo.create()
@@ -84,6 +89,33 @@ class TestPromotion(unittest.TestCase):
         promo.delete()
         self.assertEqual(len(Promotion.all()), 0)
 
+    def test_delete_product(self):
+        """ Delete a Product """
+        prod = Product(name="bicycle", price=99.99, units=100)
+        prod.create()
+        self.assertEqual(len(Product.all()), 1)
+        # delete the pet and make sure it isn't in the database
+        prod.delete()
+        self.assertEqual(len(Product.all()), 0)
+
+    def test_find_product_by_name(self):
+        """Find a Product by Name"""
+        Product(name="bicycle", price=99.99, units=100).create()
+        Product(name="iphone", price=999.99, units=10).create()
+        prod = Product.find_by_name("iphone")
+        self.assertEqual(prod[0].price, 999.99)
+        self.assertEqual(prod[0].name, "iphone")
+        self.assertEqual(prod[0].units, 10)
+        self.assertEqual(len(Product.all()), 2)
+
+    def test_find_promotion_by_name(self):
+        """Find a Promotion by Name"""
+        Promotion(name="Summer Sale", start_date=datetime.now(), type=Type.Percentage, value=0.2, ongoing=False).create()
+        Promotion(name="Winter Sale", start_date=datetime.now(), type=Type.Value, value=10.99, ongoing=True).create()
+        prom = Promotion.find_by_name("Summer Sale")
+        self.assertEqual(prom[0].type, Type.Percentage)
+        self.assertEqual(prom[0].name, "Summer Sale")
+        self.assertEqual(len(Promotion.all()), 2)
 
     def test_XXXX(self):
         """ Test something """
