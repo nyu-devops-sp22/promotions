@@ -45,7 +45,6 @@ class TestPromotion(unittest.TestCase):
         """ Create a promotion and assert that it can be instantiated"""
         promo = Promotion(name="Summer Sale", start_date=datetime.now(), type=Type.Percentage, value=0.2, ongoing=False)
         self.assertEqual(promo.name, "Summer Sale")
-        self.assertEqual(promo.products, [])
         self.assertTrue(promo is not None)
 
 
