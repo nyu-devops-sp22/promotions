@@ -5,7 +5,7 @@ Test cases for Promotion Model
 import logging
 import unittest
 import os
-from service.models import Promotion, Type, Product, DataValidationError, db
+from service.models import Promotion, Type, DataValidationError, db
 from service import app
 from datetime import datetime
 
@@ -47,38 +47,16 @@ class TestPromotion(unittest.TestCase):
         self.assertEqual(promo.name, "Summer Sale")
         self.assertEqual(promo.products, [])
         self.assertTrue(promo is not None)
-        prod = Product(name="bicycle", price=99.99, units=100)
-        promo.products.append(prod)
-        self.assertEqual(len(promo.products), 1)
 
-    def test_create_a_product(self):
-        """ Create a product and assert that it can be instantiated"""
-        product = Product(name="bicycle", price=99.99, units=100)
-        self.assertTrue(product is not None)
-        self.assertEqual(product.price, 99.99)
-        self.assertEqual(len(product.promotions), 0)
 
     def test_add_promotion(self):
         """ Add a promotion to the database """
         promotions = Promotion.all()
-        self.assertEqual(promotions, [])
         promo = Promotion(name="Summer Sale", start_date=datetime.now(), type=Type.Percentage, value=0.2, ongoing=False)
-        prod = Product(name="bicycle", price=99.99, units=100)
-        promo.products.append(prod)
         self.assertTrue(promo is not None)
         self.assertEqual(promo.id, None)
         promo.create()
         self.assertEqual(promo.id, 1)
-
-    def test_add_product(self):
-        """ Add a product to the database """
-        products = Product.all()
-        self.assertEqual(products, [])
-        prod = Product(name="bicycle", price=99.99, units=100)
-        self.assertTrue(prod is not None)
-        self.assertEqual(prod.id, None)
-        prod.create()
-        self.assertEqual(prod.id, 1)
 
     def test_delete_promotion(self):
         """ Delete a Promotion """
@@ -88,25 +66,6 @@ class TestPromotion(unittest.TestCase):
         # delete the pet and make sure it isn't in the database
         promo.delete()
         self.assertEqual(len(Promotion.all()), 0)
-
-    def test_delete_product(self):
-        """ Delete a Product """
-        prod = Product(name="bicycle", price=99.99, units=100)
-        prod.create()
-        self.assertEqual(len(Product.all()), 1)
-        # delete the pet and make sure it isn't in the database
-        prod.delete()
-        self.assertEqual(len(Product.all()), 0)
-
-    def test_find_product_by_name(self):
-        """Find a Product by Name"""
-        Product(name="bicycle", price=99.99, units=100).create()
-        Product(name="iphone", price=999.99, units=10).create()
-        prod = Product.find_by_name("iphone")
-        self.assertEqual(prod[0].price, 999.99)
-        self.assertEqual(prod[0].name, "iphone")
-        self.assertEqual(prod[0].units, 10)
-        self.assertEqual(len(Product.all()), 2)
 
     def test_find_promotion_by_name(self):
         """Find a Promotion by Name"""

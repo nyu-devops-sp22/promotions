@@ -17,16 +17,7 @@ end_date (datetime) - the date the promotion ends (can be null)
 type - the promotion type (value off, percentage off etc.)
 value (number) - the discounted value the promotion applies to products
 ongoing (boolean) - True for promotions that are ongoing
-
-
-Product - A Prodcut available through the e-commerce service
-
-Attributes:
------------
-id (int) - the id of the prodcut 
-name (string) - the name of the product 
-price () - the price of the product 
-units (int) - the number of units available of a specific product 
+product_id (Integer) - product id that's part of the promotion 
 
 """
 import logging
@@ -56,19 +47,6 @@ class Type(Enum):
     Unknown = 3
 
 
-""" 
-Table for many-to-many relationship between promotions and products.
-
-According to flask documentation:
-
-"If you want to use many-to-many relationships you will need to define a helper table that is used for the relationship.
-For this helper table it is strongly recommended to not use a model but an actual table"
-"""
-products = db.Table('products',
-    db.Column('product_id', db.Integer, db.ForeignKey('product.id'), primary_key=True),
-    db.Column('promotion_id', db.Integer, db.ForeignKey('promotion.id'), primary_key=True)
-)
-
 class Promotion(db.Model):
     """
     Class that represents a Promotion
@@ -85,10 +63,7 @@ class Promotion(db.Model):
     type =  db.Column(db.Enum(Type), nullable=False)  # the promotion type (value off, percentage off etc.)
     value = db.Column(db.Float, nullable=False)  # the discounted value the promotion applies to products
     ongoing = db.Column(db.Boolean, nullable=False)  # True for promotions that are ongoing
-
-    # Relationship between promotions and products. Because of the backref, the Product table will also have a field called promotions
-    products = db.relationship('Product', secondary=products, lazy='subquery', backref=db.backref('promotions', lazy=True))  
-
+    product_id = db.Column(db.Integer) 
     ##################################################
     # INSTANCE METHODS
     ##################################################
@@ -158,106 +133,6 @@ class Promotion(db.Model):
         db.init_app(app)
         app.app_context().push()
         db.create_all()  # make our sqlalchemy tables
-
-    @classmethod
-    def all(cls):
-        """ Returns all of the Promotions in the database """
-        logger.info("Processing all Promotions")
-        return cls.query.all()
-
-    @classmethod
-    def find(cls, by_id):
-        """ Finds a Promotion by it's ID """
-        logger.info("Processing lookup for id %s ...", by_id)
-        return cls.query.get(by_id)
-
-    @classmethod
-    def find_or_404(cls, by_id):
-        """ Find a Promotion by it's id """
-        logger.info("Processing lookup or 404 for id %s ...", by_id)
-        return cls.query.get_or_404(by_id)
-
-    @classmethod
-    def find_by_name(cls, name):
-        """Returns all Promotions with the given name
-
-        Args:
-            name (string): the name of the Promotions you want to match
-        """
-        logger.info("Processing name query for %s ...", name)
-        return cls.query.filter(cls.name == name)
-
-
-
-class Product(db.Model):
-    """
-    Class that represents a Product
-    """
-
-    ##################################################
-    # Table Schema
-    ##################################################
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(63), nullable=False)  # the name of the promotion
-    price = db.Column(db.Float, nullable=False)  # the discounted value the promotion applies to products
-    units = db.Column(db.Integer, nullable=False)  # True for promotions that are ongoing
-
-    ##################################################
-    # INSTANCE METHODS
-    ##################################################
-
-    def __repr__(self):
-        return "<Product %r id=[%s]>" % (self.name, self.id)
-
-    def create(self):
-        """
-        Creates a Product to the database
-        """
-        logger.info("Creating %s", self.name)
-        self.id = None  # id must be none to generate next primary key
-        db.session.add(self)
-        db.session.commit()
-
-    def update(self):
-        """
-        Updates a Product to the database
-        """
-        logger.info("Saving %s", self.name)
-        db.session.commit()
-
-    def delete(self):
-        """ Removes a Product from the data store """
-        logger.info("Deleting %s", self.name)
-        db.session.delete(self)
-        db.session.commit()
-
-    def serialize(self):
-        """ Serializes a Product into a dictionary """
-        return {"id": self.id, "name": self.name}
-
-    def deserialize(self, data):
-        """
-        Deserializes a Product from a dictionary
-
-        Args:
-            data (dict): A dictionary containing the product's data
-        """
-        try:
-            self.name = data["name"]
-        except KeyError as error:
-            raise DataValidationError(
-                "Invalid Product: missing " + error.args[0]
-            )
-        except TypeError as error:
-            raise DataValidationError(
-                "Invalid Product: body of request contained bad or no data"
-            )
-        return self
-
-    ##################################################
-    # CLASS METHODS
-    ##################################################
 
     @classmethod
     def all(cls):
