@@ -3,12 +3,13 @@ Models for Promotion
 
 All of the models are stored in this module
 
-Models
+Model
 ------
 Promotion - A Promotion used in the e-commerce service
 
 Attributes:
 -----------
+id (int) - the id of the promotion
 name (string) - the name of the promotion
 code (string) - the code that identifies the promotion
 start_date (string) - the date the promotion starts
@@ -54,8 +55,15 @@ class Promotion(db.Model):
     ##################################################
     # Table Schema
     ##################################################
+
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(63), nullable=False)
+    name = db.Column(db.String(63), nullable=False)  # the name of the promotion
+    start_date = db.Column(db.DateTime, nullable=False)  # the date the promotion starts
+    end_date = db.Column(db.DateTime, nullable=True)  # the date the promotion ends (can be null)
+    type =  db.Column(db.Enum(Type), nullable=False)  # the promotion type (value off, percentage off etc.)
+    value = db.Column(db.Float, nullable=False)  # the discounted value the promotion applies to products
+    ongoing = db.Column(db.Boolean, nullable=False)  # True for promotions that are ongoing
+    product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
 
     ##################################################
     # INSTANCE METHODS
@@ -154,3 +162,51 @@ class Promotion(db.Model):
         """
         logger.info("Processing name query for %s ...", name)
         return cls.query.filter(cls.name == name)
+
+
+"""
+Model
+------
+Product - A Prodcut available through the e-commerce service
+
+Attributes:
+-----------
+id (int) - the id of the prodcut 
+name (string) - the name of the product 
+price () - the price of the product 
+units (int) - the number of units available of a specific product 
+
+"""
+
+
+class Product(db.Model):
+    """
+    Class that represents a Product
+    """
+
+    app = None
+
+    ##################################################
+    # Table Schema
+    ##################################################
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(63), nullable=False)  # the name of the promotion
+    price = db.Column(db.Float, nullable=False)  # the discounted value the promotion applies to products
+    units = db.Column(db.Integer, nullable=False)  # True for promotions that are ongoing
+
+    ##################################################
+    # INSTANCE METHODS
+    ##################################################
+
+    def __repr__(self):
+        return "<Promotion %r id=[%s]>" % (self.name, self.id)
+
+    def create(self):
+        """
+        Creates a Prodcut to the database
+        """
+        logger.info("Creating %s", self.name)
+        self.id = None  # id must be none to generate next primary key
+        db.session.add(self)
+        db.session.commit()

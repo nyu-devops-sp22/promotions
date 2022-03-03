@@ -36,7 +36,8 @@ def index():
         jsonify(
             name="Promotions REST API Service",
             version="1.0",
-            paths=url_for("list_promotions", _external=True),
+            # The line below generates an error in the tests because the route for list_promotions has not been implemented yet. 
+            # paths=url_for("list_promotions", _external=True),
         ),
         status.HTTP_200_OK,
     )
