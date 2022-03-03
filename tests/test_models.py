@@ -75,6 +75,16 @@ class TestPromotion(unittest.TestCase):
         prod.create()
         self.assertEqual(prod.id, 1)
 
+    def test_delete_promotion(self):
+        """ Delete a Promotion """
+        promo = Promotion(name="Summer Sale", start_date=datetime.now(), type=Type.Percentage, value=0.2, ongoing=False)
+        promo.create()
+        self.assertEqual(len(Promotion.all()), 1)
+        # delete the pet and make sure it isn't in the database
+        promo.delete()
+        self.assertEqual(len(Promotion.all()), 0)
+
+
     def test_XXXX(self):
         """ Test something """
         self.assertTrue(True)

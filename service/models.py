@@ -85,7 +85,9 @@ class Promotion(db.Model):
     type =  db.Column(db.Enum(Type), nullable=False)  # the promotion type (value off, percentage off etc.)
     value = db.Column(db.Float, nullable=False)  # the discounted value the promotion applies to products
     ongoing = db.Column(db.Boolean, nullable=False)  # True for promotions that are ongoing
-    products = db.relationship('Product', secondary=products, lazy='subquery', backref=db.backref('promotions', lazy=True))  # relationship between promotions and products
+
+    # Relationship between promotions and products. Because of the backref, the Product table will also have a field called promotions
+    products = db.relationship('Product', secondary=products, lazy='subquery', backref=db.backref('promotions', lazy=True))  
 
     ##################################################
     # INSTANCE METHODS
@@ -259,28 +261,28 @@ class Product(db.Model):
 
     @classmethod
     def all(cls):
-        """ Returns all of the Product in the database """
-        logger.info("Processing all Product")
+        """ Returns all of the Promotions in the database """
+        logger.info("Processing all Promotions")
         return cls.query.all()
 
     @classmethod
     def find(cls, by_id):
-        """ Finds a Product by it's ID """
+        """ Finds a Promotion by it's ID """
         logger.info("Processing lookup for id %s ...", by_id)
         return cls.query.get(by_id)
 
     @classmethod
     def find_or_404(cls, by_id):
-        """ Find a Product by it's id """
+        """ Find a Promotion by it's id """
         logger.info("Processing lookup or 404 for id %s ...", by_id)
         return cls.query.get_or_404(by_id)
 
     @classmethod
     def find_by_name(cls, name):
-        """Returns all Product with the given name
+        """Returns all Promotions with the given name
 
         Args:
-            name (string): the name of the Product you want to match
+            name (string): the name of the Promotions you want to match
         """
         logger.info("Processing name query for %s ...", name)
         return cls.query.filter(cls.name == name)
