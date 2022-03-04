@@ -46,7 +46,7 @@ def index():
 
 
 @app.route("/promotions/<int:promotion_id>", methods=['GET'])
-def get_promotion(promotion_id):
+def get_promotions(promotion_id):
     """
     Retrieve a single Promotion
 
@@ -63,7 +63,7 @@ def get_promotion(promotion_id):
 
 
 @app.route("/promotions", methods=['POST'])
-def create_promotion():
+def create_promotions():
     """Creates a promotion
 
     This endpoint will create a Promotion based on the data in the body that is posted
@@ -75,7 +75,7 @@ def create_promotion():
     promotion.create()
     message = promotion.serialize()
     location_url = url_for(
-        "get_promotion", promotion_id=promotion.id, _external=True)
+        "get_promotions", promotion_id=promotion.id, _external=True)
 
     app.logger.info("Promotion with ID [%s] created.", promotion.id)
     return make_response(

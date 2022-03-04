@@ -81,6 +81,26 @@ class TestPromotionServer(TestCase):
         resp = self.app.get("/")
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
 
+    def test_get_promotion(self):
+        """Get a single Promotion"""
+        # get the id of a pet
+        test_promotion = self._create_promotions(1)[0]
+        resp = self.app.get(
+            "/promotions/{}".format(test_promotion.id), content_type=CONTENT_TYPE_JSON
+        )
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        data = resp.get_json()
+        self.assertEqual(data['name'], test_promotion.name)
+        self.assertEqual(data['start_date'].strip(),
+                         test_promotion.start_date.strftime("%m-%d-%Y %H:%M:%S %z")[:-5].strip())
+        self.assertEqual(data['end_date'].strip(),
+                         test_promotion.end_date.strftime("%m-%d-%Y %H:%M:%S %z")[:-5].strip())
+        self.assertEqual(data['type'], test_promotion.type.name)
+        self.assertEqual(data['value'], test_promotion.value)
+        self.assertEqual(data['ongoing'], test_promotion.ongoing)
+        self.assertEqual(
+            data['product_id'], test_promotion.product_id)
+
     def test_create_promotion(self):
         """Create a new Promotion"""
         test_promotion = PromotionFactory()
