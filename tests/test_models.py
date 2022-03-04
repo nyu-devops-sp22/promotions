@@ -2,16 +2,22 @@
 Test cases for Promotion Model
 
 """
+import logging
+import os
 import unittest
 from datetime import datetime
 
 from service import app
 from service.models import Promotion, Type, db
+
 from .factories import PromotionFactory
 
 
+DATABASE_URI = os.getenv(
+    "DATABASE_URI", "postgresql://postgres:postgres@localhost:5432/testdb"
+)
 ######################################################################
-#  <your resource name>   M O D E L   T E S T   C A S E S
+#  P R O M O T I O N   M O D E L   T E S T   C A S E S
 ######################################################################
 
 
@@ -23,6 +29,8 @@ class TestPromotion(unittest.TestCase):
         """ This runs once before the entire test suite """
         app.config["TESTING"] = True
         app.config["DEBUG"] = False
+        app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URI
+        app.logger.setLevel(logging.CRITICAL)
         Promotion.init_db(app)
 
     @classmethod
