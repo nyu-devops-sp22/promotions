@@ -9,13 +9,15 @@ Promotion - A Promotion used in the e-commerce service
 
 Attributes:
 -----------
+id (int) - the id of the promotion
 name (string) - the name of the promotion
 code (string) - the code that identifies the promotion
-start_date (string) - the date the promotion starts
-end_date (string) - the date the promotion ends (can be null)
+start_date (datetime) - the date the promotion starts
+end_date (datetime) - the date the promotion ends (can be null)
 type - the promotion type (value off, percentage off etc.)
 value (number) - the discounted value the promotion applies to products
 ongoing (boolean) - True for promotions that are ongoing
+product_id (Integer) - product id that's part of the promotion 
 
 """
 import logging
@@ -44,19 +46,24 @@ class Type(Enum):
     Percentage = 1 # 10% off, 20% off etc.
     Unknown = 3
 
+
 class Promotion(db.Model):
     """
     Class that represents a Promotion
     """
 
-    app = None
-
     ##################################################
     # Table Schema
     ##################################################
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(63), nullable=False)
 
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(63), nullable=False)  # the name of the promotion
+    start_date = db.Column(db.DateTime, nullable=False)  # the date the promotion starts
+    end_date = db.Column(db.DateTime, nullable=True)  # the date the promotion ends (can be null)
+    type =  db.Column(db.Enum(Type), nullable=False)  # the promotion type (value off, percentage off etc.)
+    value = db.Column(db.Float, nullable=False)  # the discounted value the promotion applies to products
+    ongoing = db.Column(db.Boolean, nullable=False)  # True for promotions that are ongoing
+    product_id = db.Column(db.Integer) 
     ##################################################
     # INSTANCE METHODS
     ##################################################
