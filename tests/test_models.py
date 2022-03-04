@@ -3,15 +3,24 @@ Test cases for Promotion Model
 
 """
 import logging
-import unittest
 import os
-from service.models import Promotion, Type, DataValidationError, db
-from service import app
+import unittest
 from datetime import datetime
 
+from service import app
+from service.models import Promotion, Type, db
+
+from .factories import PromotionFactory
+
+
+DATABASE_URI = os.getenv(
+    "DATABASE_URI", "postgresql://postgres:postgres@localhost:5432/testdb"
+)
 ######################################################################
-#  <your resource name>   M O D E L   T E S T   C A S E S
+#  P R O M O T I O N   M O D E L   T E S T   C A S E S
 ######################################################################
+
+
 class TestPromotion(unittest.TestCase):
     """ Test Cases for Promotion Model """
 
@@ -20,6 +29,8 @@ class TestPromotion(unittest.TestCase):
         """ This runs once before the entire test suite """
         app.config["TESTING"] = True
         app.config["DEBUG"] = False
+        app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URI
+        app.logger.setLevel(logging.CRITICAL)
         Promotion.init_db(app)
 
     @classmethod
@@ -43,15 +54,24 @@ class TestPromotion(unittest.TestCase):
 
     def test_create_a_promotion(self):
         """ Create a promotion and assert that it can be instantiated"""
-        promo = Promotion(name="Summer Sale", start_date=datetime.now(), type=Type.Percentage, value=0.2, ongoing=False)
+        promo = Promotion(name="Summer Sale",
+                          start_date=datetime.now(),
+                          type=Type.Percentage,
+                          value=0.2,
+                          ongoing=False,
+                          product_id=11)
         self.assertEqual(promo.name, "Summer Sale")
         self.assertTrue(promo is not None)
-
 
     def test_add_promotion(self):
         """ Add a promotion to the database """
         promotions = Promotion.all()
-        promo = Promotion(name="Summer Sale", start_date=datetime.now(), type=Type.Percentage, value=0.2, ongoing=False)
+        promo = Promotion(name="Summer Sale",
+                          start_date=datetime.now(),
+                          type=Type.Percentage,
+                          value=0.2,
+                          ongoing=False,
+                          product_id=12)
         self.assertTrue(promo is not None)
         self.assertEqual(promo.id, None)
         promo.create()
@@ -59,7 +79,12 @@ class TestPromotion(unittest.TestCase):
 
     def test_delete_promotion(self):
         """ Delete a Promotion """
-        promo = Promotion(name="Summer Sale", start_date=datetime.now(), type=Type.Percentage, value=0.2, ongoing=False)
+        promo = Promotion(name="Summer Sale",
+                          start_date=datetime.now(),
+                          type=Type.Percentage,
+                          value=0.2,
+                          ongoing=False,
+                          product_id=11)
         promo.create()
         self.assertEqual(len(Promotion.all()), 1)
         # delete the pet and make sure it isn't in the database
@@ -68,13 +93,86 @@ class TestPromotion(unittest.TestCase):
 
     def test_find_promotion_by_name(self):
         """Find a Promotion by Name"""
-        Promotion(name="Summer Sale", start_date=datetime.now(), type=Type.Percentage, value=0.2, ongoing=False).create()
-        Promotion(name="Winter Sale", start_date=datetime.now(), type=Type.Value, value=10.99, ongoing=True).create()
+        Promotion(name="Summer Sale",
+                  start_date=datetime.now(),
+                  type=Type.Percentage,
+                  value=0.2,
+                  ongoing=False,
+                  product_id=11).create()
+        Promotion(name="Winter Sale",
+                  start_date=datetime.now(),
+                  type=Type.Value,
+                  value=10.99,
+                  ongoing=True,
+                  product_id=12).create()
         prom = Promotion.find_by_name("Summer Sale")
         self.assertEqual(prom[0].type, Type.Percentage)
         self.assertEqual(prom[0].name, "Summer Sale")
         self.assertEqual(len(Promotion.all()), 2)
 
-    def test_XXXX(self):
-        """ Test something """
-        self.assertTrue(True)
+    def test_find_by_product_id(self):
+        """Find Promotions by product_id"""
+        Promotion(name="Summer Sale",
+                  start_date=datetime.now(),
+                  type=Type.Percentage,
+                  value=0.2,
+                  ongoing=True,
+                  product_id=11).create()
+        Promotion(name="Winter Sale",
+                  start_date=datetime.now(),
+                  type=Type.Percentage,
+                  value=0.3,
+                  ongoing=False,
+                  product_id=12).create()
+        promotions = list(Promotion.find_by_product_id(11))
+        self.assertEqual(len(promotions), 1)
+        self.assertEqual(promotions[0].name, "Summer Sale")
+        self.assertEqual(promotions[0].value, 0.2)
+
+    def test_serialize_a_promotion(self):
+        """Test serialization of a Promotion"""
+        promotion = PromotionFactory()
+        data = promotion.serialize()
+        self.assertNotEqual(data, None)
+        self.assertIn('id', data)
+        self.assertEqual(data['id'], promotion.id)
+        self.assertIn('name', data)
+        self.assertEqual(data['name'], promotion.name)
+        self.assertIn('start_date', data)
+        self.assertEqual(
+            data['start_date'], promotion.start_date.strftime("%m-%d-%Y %H:%M:%S %z"))
+        self.assertIn('end_date', data)
+        self.assertEqual(data['end_date'],
+                         promotion.end_date.strftime("%m-%d-%Y %H:%M:%S %z"))
+        self.assertIn('type', data)
+        self.assertEqual(data['type'], promotion.type.name)
+        self.assertIn('value', data)
+        self.assertEqual(data['value'], promotion.value)
+        self.assertIn('ongoing', data)
+        self.assertEqual(data['ongoing'], promotion.ongoing)
+        self.assertIn('product_id', data)
+        self.assertEqual(data['product_id'], promotion.product_id)
+
+    def test_deserialize_a_promotion(self):
+        """Test deserialization of a Promotion"""
+        example = PromotionFactory()
+        data = example.serialize()
+        promotion = Promotion()
+        promotion.deserialize(data)
+        self.assertNotEqual(promotion, None)
+        self.assertEqual(promotion.id, None)
+        self.assertEqual(promotion.name, example.name)
+        self.assertEqual(promotion.start_date, datetime.strptime(
+            data['start_date'], "%m-%d-%Y %H:%M:%S %z"))
+        self.assertEqual(promotion.end_date, datetime.strptime(
+            data['end_date'], "%m-%d-%Y %H:%M:%S %z"))
+        self.assertEqual(promotion.type, example.type)
+        self.assertEqual(promotion.value, example.value)
+        self.assertEqual(promotion.ongoing, example.ongoing)
+        self.assertEqual(promotion.product_id, example.product_id)
+
+    def test_repr(self):
+        """Test representation of a promotion"""
+        promotion = PromotionFactory()
+        self.assertEqual(repr(promotion), "<Promotion %r id=[%s]>" % (
+            promotion.name, promotion.id))
