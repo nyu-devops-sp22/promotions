@@ -233,13 +233,42 @@ class TestPromotion(unittest.TestCase):
         data["product_id"] = 1.0 # wrong type
         promotion = Promotion()
         self.assertRaises(DataValidationError, promotion.deserialize, data)
+    
+    def test_deserialize_no_end_date(self):
+        """Test deserialization of attribute end_date = None"""
+        test_promotion = PromotionFactory()
+        data = test_promotion.serialize()
+        data["end_date"] = None
+        promotion = Promotion()
+        promotion.deserialize(data)
+        self.assertIs(promotion.end_date, None)
+
+    def test_deserialize_missing_data(self):
+        """Test deserialization of a Promotion with missing data"""
+        data = {"start_date" : datetime.now(),
+                "type" : Type.Percentage,
+                "value" : 0.2,
+                "ongoing" : True,
+                "product_id" : 2}
+        promotion = Promotion()
+        self.assertRaises(DataValidationError, promotion.deserialize, data)
+    
+    def test_deserialize_invalid_start_date(self):
+        """Test deserialization of a Promotion with invalid start_date data type"""
+        data = {"name" : "Summer Sale",
+                "start_date" : "202-03-01",
+                "type" : Type.Percentage,
+                "value" : 0.2,
+                "ongoing" : True,
+                "product_id" : 2}
+        promotion = Promotion()
+        self.assertRaises(DataValidationError, promotion.deserialize, data)
 
     def test_repr(self):
         """Test representation of a promotion"""
         promotion = PromotionFactory()
         self.assertEqual(repr(promotion), "<Promotion %r id=[%s]>" % (
             promotion.name, promotion.id))
-
 
     def test_find_or_404_found(self):
         """Find or return 404 found"""
