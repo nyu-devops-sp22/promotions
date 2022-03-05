@@ -177,6 +177,62 @@ class TestPromotion(unittest.TestCase):
         data = "this is not a dictionary"
         promotion = Promotion()
         self.assertRaises(DataValidationError, promotion.deserialize, data)
+    
+    def test_deserialize_bad_name(self):
+        """Test deserialization of bad name attribute"""
+        test_promotion = PromotionFactory()
+        data = test_promotion.serialize()
+        data["name"] = 3.0  # wrong type
+        promotion = Promotion()
+        self.assertRaises(DataValidationError, promotion.deserialize, data)
+    
+    def test_deserialize_bad_start_date(self):
+        """Test deserialization of bad start_date attribute"""
+        test_promotion = PromotionFactory()
+        data = test_promotion.serialize()
+        data["start_date"] = 2022.03  # wrong type
+        promotion = Promotion()
+        self.assertRaises(DataValidationError, promotion.deserialize, data)
+    
+    def test_deserialize_bad_end_date(self):
+        """Test deserialization of bad end_date attribute"""
+        test_promotion = PromotionFactory()
+        data = test_promotion.serialize()
+        data["end_date"] = 2022.03  # wrong type
+        promotion = Promotion()
+        self.assertRaises(DataValidationError, promotion.deserialize, data)
+    
+    def test_deserialize_bad_type(self):
+        """Test deserialization of bad type attribute"""
+        test_promotion = PromotionFactory()
+        data = test_promotion.serialize()
+        data["type"] = 1 # wrong case
+        promotion = Promotion()
+        self.assertRaises(DataValidationError, promotion.deserialize, data)
+    
+    def test_deserialize_bad_value(self):
+        """Test deserialization of bad value attribute"""
+        test_promotion = PromotionFactory()
+        data = test_promotion.serialize()
+        data["value"] = "Value" # wrong type
+        promotion = Promotion()
+        self.assertRaises(DataValidationError, promotion.deserialize, data)
+    
+    def test_deserialize_bad_ongoing(self):
+        """Test deserialization of bad ongoing attribute"""
+        test_promotion = PromotionFactory()
+        data = test_promotion.serialize()
+        data["ongoing"] = "ongoing" # wrong type
+        promotion = Promotion()
+        self.assertRaises(DataValidationError, promotion.deserialize, data)
+    
+    def test_deserialize_bad_product_id(self):
+        """Test deserialization of bad product_id attribute"""
+        test_promotion = PromotionFactory()
+        data = test_promotion.serialize()
+        data["product_id"] = 1.0 # wrong type
+        promotion = Promotion()
+        self.assertRaises(DataValidationError, promotion.deserialize, data)
 
     def test_repr(self):
         """Test representation of a promotion"""
