@@ -9,7 +9,7 @@ from datetime import datetime
 from werkzeug.exceptions import NotFound
 
 from service import app
-from service.models import Promotion, Type, db
+from service.models import Promotion, Type, db, DataValidationError
 
 from .factories import PromotionFactory
 
@@ -171,6 +171,12 @@ class TestPromotion(unittest.TestCase):
         self.assertEqual(promotion.value, example.value)
         self.assertEqual(promotion.ongoing, example.ongoing)
         self.assertEqual(promotion.product_id, example.product_id)
+
+    def test_deserialize_bad_data(self):
+        """Test deserialization of bad data"""
+        data = "this is not a dictionary"
+        promotion = Promotion()
+        self.assertRaises(DataValidationError, promotion.deserialize, data)
 
     def test_repr(self):
         """Test representation of a promotion"""
