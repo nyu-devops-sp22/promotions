@@ -152,3 +152,26 @@ class TestPromotionServer(TestCase):
             "{0}/{1}".format(BASE_URL, test_promotion.id), content_type=CONTENT_TYPE_JSON
         )
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_method_not_supported_error(self):
+        """ Test Method Not Supported Error """
+        test_promotion = self._create_promotions(1)[0]
+        resp = self.app.get(
+            "{0}".format(BASE_URL), content_type=CONTENT_TYPE_JSON
+        )
+        self.assertEqual(resp.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+        resp = self.app.post(
+            "{0}/{1}".format(BASE_URL, test_promotion.id), content_type=CONTENT_TYPE_JSON
+        )
+        self.assertEqual(resp.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+    
+    def test_data_validation_error(self):
+        """ Test Data Validation Error """
+        # Needed to test the function request_validation_error, and bad_request
+        test_promotion = PromotionFactory()
+        test_promotion.name = 1
+        resp = self.app.post(
+            BASE_URL, json=test_promotion.serialize(), content_type=CONTENT_TYPE_JSON
+        )
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+
