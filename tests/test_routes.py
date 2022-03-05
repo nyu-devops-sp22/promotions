@@ -72,10 +72,6 @@ class TestPromotionServer(TestCase):
             promotions.append(test_promotion)
         return promotions
 
-    ######################################################################
-    #  P L A C E   T E S T   C A S E S   H E R E
-    ######################################################################
-
     def test_index(self):
         """ Test index call """
         resp = self.app.get("/")
@@ -83,7 +79,7 @@ class TestPromotionServer(TestCase):
 
     def test_get_promotion(self):
         """Get a single Promotion"""
-        # get the id of a pet
+        # get the id of a promotion
         test_promotion = self._create_promotions(1)[0]
         resp = self.app.get(
             "/promotions/{}".format(test_promotion.id), content_type=CONTENT_TYPE_JSON
@@ -141,3 +137,18 @@ class TestPromotionServer(TestCase):
         self.assertEqual(new_promotion['ongoing'], test_promotion.ongoing)
         self.assertEqual(
             new_promotion['product_id'], test_promotion.product_id)
+
+
+    def test_delete_promotion(self):
+        """Delete a Promotion"""
+        test_promotion = self._create_promotions(1)[0]
+        resp = self.app.delete(
+            "{0}/{1}".format(BASE_URL, test_promotion.id), content_type=CONTENT_TYPE_JSON
+        )
+        self.assertEqual(resp.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(len(resp.data), 0)
+        # make sure promotion is deleted
+        resp = self.app.get(
+            "{0}/{1}".format(BASE_URL, test_promotion.id), content_type=CONTENT_TYPE_JSON
+        )
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)

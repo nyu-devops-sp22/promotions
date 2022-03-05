@@ -6,9 +6,10 @@ import logging
 import os
 import unittest
 from datetime import datetime
+from werkzeug.exceptions import NotFound
 
 from service import app
-from service.models import Promotion, Type, db
+from service.models import Promotion, Type, db, DataValidationError
 
 from .factories import PromotionFactory
 
@@ -171,8 +172,121 @@ class TestPromotion(unittest.TestCase):
         self.assertEqual(promotion.ongoing, example.ongoing)
         self.assertEqual(promotion.product_id, example.product_id)
 
+    def test_deserialize_bad_data(self):
+        """Test deserialization of bad data"""
+        data = "this is not a dictionary"
+        promotion = Promotion()
+        self.assertRaises(DataValidationError, promotion.deserialize, data)
+    
+    def test_deserialize_bad_name(self):
+        """Test deserialization of bad name attribute"""
+        test_promotion = PromotionFactory()
+        data = test_promotion.serialize()
+        data["name"] = 3.0  # wrong type
+        promotion = Promotion()
+        self.assertRaises(DataValidationError, promotion.deserialize, data)
+    
+    def test_deserialize_bad_start_date(self):
+        """Test deserialization of bad start_date attribute"""
+        test_promotion = PromotionFactory()
+        data = test_promotion.serialize()
+        data["start_date"] = 2022.03  # wrong type
+        promotion = Promotion()
+        self.assertRaises(DataValidationError, promotion.deserialize, data)
+    
+    def test_deserialize_bad_end_date(self):
+        """Test deserialization of bad end_date attribute"""
+        test_promotion = PromotionFactory()
+        data = test_promotion.serialize()
+        data["end_date"] = 2022.03  # wrong type
+        promotion = Promotion()
+        self.assertRaises(DataValidationError, promotion.deserialize, data)
+    
+    def test_deserialize_bad_type(self):
+        """Test deserialization of bad type attribute"""
+        test_promotion = PromotionFactory()
+        data = test_promotion.serialize()
+        data["type"] = 1 # wrong case
+        promotion = Promotion()
+        self.assertRaises(DataValidationError, promotion.deserialize, data)
+    
+    def test_deserialize_bad_value(self):
+        """Test deserialization of bad value attribute"""
+        test_promotion = PromotionFactory()
+        data = test_promotion.serialize()
+        data["value"] = "Value" # wrong type
+        promotion = Promotion()
+        self.assertRaises(DataValidationError, promotion.deserialize, data)
+    
+    def test_deserialize_bad_ongoing(self):
+        """Test deserialization of bad ongoing attribute"""
+        test_promotion = PromotionFactory()
+        data = test_promotion.serialize()
+        data["ongoing"] = "ongoing" # wrong type
+        promotion = Promotion()
+        self.assertRaises(DataValidationError, promotion.deserialize, data)
+    
+    def test_deserialize_bad_product_id(self):
+        """Test deserialization of bad product_id attribute"""
+        test_promotion = PromotionFactory()
+        data = test_promotion.serialize()
+        data["product_id"] = 1.0 # wrong type
+        promotion = Promotion()
+        self.assertRaises(DataValidationError, promotion.deserialize, data)
+    
+    def test_deserialize_no_end_date(self):
+        """Test deserialization of attribute end_date = None"""
+        test_promotion = PromotionFactory()
+        data = test_promotion.serialize()
+        data["end_date"] = None
+        promotion = Promotion()
+        promotion.deserialize(data)
+        self.assertIs(promotion.end_date, None)
+
+    def test_deserialize_missing_data(self):
+        """Test deserialization of a Promotion with missing data"""
+        data = {"start_date" : datetime.now(),
+                "type" : Type.Percentage,
+                "value" : 0.2,
+                "ongoing" : True,
+                "product_id" : 2}
+        promotion = Promotion()
+        self.assertRaises(DataValidationError, promotion.deserialize, data)
+    
+    def test_deserialize_invalid_start_date(self):
+        """Test deserialization of a Promotion with invalid start_date data type"""
+        data = {"name" : "Summer Sale",
+                "start_date" : "202-03-01",
+                "type" : Type.Percentage,
+                "value" : 0.2,
+                "ongoing" : True,
+                "product_id" : 2}
+        promotion = Promotion()
+        self.assertRaises(DataValidationError, promotion.deserialize, data)
+
     def test_repr(self):
         """Test representation of a promotion"""
         promotion = PromotionFactory()
         self.assertEqual(repr(promotion), "<Promotion %r id=[%s]>" % (
             promotion.name, promotion.id))
+
+    def test_find_or_404_found(self):
+        """Find or return 404 found"""
+        promotions = PromotionFactory.create_batch(3)
+        for promotion in promotions:
+            promotion.create()
+
+        promotion = Promotion.find_or_404(promotions[1].id)
+        self.assertIsNot(promotion, None)
+        self.assertEqual(promotion.id, promotions[1].id)
+        self.assertEqual(promotion.name, promotions[1].name)
+        self.assertEqual(promotion.type, promotions[1].type)
+        self.assertEqual(promotion.start_date, promotions[1].start_date)
+        self.assertEqual(promotion.end_date, promotions[1].end_date)
+        self.assertEqual(promotion.value, promotions[1].value)
+        self.assertEqual(promotion.ongoing, promotions[1].ongoing)
+        self.assertEqual(promotion.product_id, promotions[1].product_id)
+
+    def test_find_or_404_not_found(self):
+        """Find or return 404 NOT found"""
+        self.assertRaises(NotFound, Promotion.find_or_404, 0)
