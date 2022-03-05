@@ -6,6 +6,7 @@ import logging
 import os
 import unittest
 from datetime import datetime
+from werkzeug.exceptions import NotFound
 
 from service import app
 from service.models import Promotion, Type, db
@@ -176,3 +177,25 @@ class TestPromotion(unittest.TestCase):
         promotion = PromotionFactory()
         self.assertEqual(repr(promotion), "<Promotion %r id=[%s]>" % (
             promotion.name, promotion.id))
+
+
+    def test_find_or_404_found(self):
+        """Find or return 404 found"""
+        promotions = PromotionFactory.create_batch(3)
+        for promotion in promotions:
+            promotion.create()
+
+        promotion = Promotion.find_or_404(promotions[1].id)
+        self.assertIsNot(promotion, None)
+        self.assertEqual(promotion.id, promotions[1].id)
+        self.assertEqual(promotion.name, promotions[1].name)
+        self.assertEqual(promotion.type, promotions[1].type)
+        self.assertEqual(promotion.start_date, promotions[1].start_date)
+        self.assertEqual(promotion.end_date, promotions[1].end_date)
+        self.assertEqual(promotion.value, promotions[1].value)
+        self.assertEqual(promotion.ongoing, promotions[1].ongoing)
+        self.assertEqual(promotion.product_id, promotions[1].product_id)
+
+    def test_find_or_404_not_found(self):
+        """Find or return 404 NOT found"""
+        self.assertRaises(NotFound, Promotion.find_or_404, 0)
