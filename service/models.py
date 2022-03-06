@@ -21,7 +21,7 @@ product_id (Integer) - product id that's part of the promotion
 
 """
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
 
 from flask import Flask
@@ -137,16 +137,14 @@ class Promotion(db.Model):
                     + str(type(data['name']))
                 )
             if isinstance(data['start_date'], str):
-                self.start_date = datetime.strptime(
-                    data['start_date'], "%m-%d-%Y %H:%M:%S %z")
+                self.start_date = parse_datetime_optional_timezone(data['start_date'])
             else:
                 raise DataValidationError(
                     "Invalid type for string [start_date]: "
                     + str(type(data['start_date']))
                 )
             if isinstance(data['end_date'], str):
-                self.end_date = datetime.strptime(
-                    data['end_date'], "%m-%d-%Y %H:%M:%S %z")
+                self.end_date = parse_datetime_optional_timezone(data['end_date'])
             elif data['end_date'] is None:
                 self.end_date = None
             else:
@@ -189,12 +187,12 @@ class Promotion(db.Model):
                 "Invalid promotion: missing " + error.args[0])
         except TypeError as error:
             raise DataValidationError(
-                "Invalid promotion: body of request contained bad or no data " +
+                "Invalid promotion: body of request contained bad or no data: " +
                 str(error)
             )
         except ValueError as error:
             raise DataValidationError(
-                "Invalid promotion: perhaps provide invalid format of time" +
+                "Invalid promotion: perhaps provide invalid format of time: " +
                 str(error)
             )
         return self
@@ -254,3 +252,12 @@ class Promotion(db.Model):
         """
         logger.info("Processing product_id query for %s ...", product_id)
         return cls.query.filter(cls.product_id == product_id)
+
+def parse_datetime_optional_timezone(time_str):
+    time_str = time_str.strip()
+    try:
+        return datetime.strptime(time_str, "%m-%d-%Y %H:%M:%S %z")
+    except:
+        dt = datetime.strptime(time_str, "%m-%d-%Y %H:%M:%S")
+        dt.replace(tzinfo=timezone.utc)
+        return dt
