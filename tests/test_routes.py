@@ -9,7 +9,6 @@ import logging
 import os
 from unittest import TestCase
 # from unittest.mock import MagicMock, patch
-from urllib.parse import quote_plus
 from service import app, status  # HTTP Status Codes
 from service.models import db, init_db
 
@@ -200,7 +199,7 @@ class TestPromotionServer(TestCase):
         test_product_id = promotions[0].product_id
         product_id_promotions = [promotion for promotion in promotions if promotion.product_id == test_product_id]
         resp = self.app.get(
-            BASE_URL, query_string="product_id={}".format(quote_plus(test_product_id))
+            BASE_URL, query_string="product_id={}".format(test_product_id)
         )
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         data = resp.get_json()
@@ -212,7 +211,7 @@ class TestPromotionServer(TestCase):
     def test_method_not_supported_error(self):
         """ Test Method Not Supported Error """
         test_promotion = self._create_promotions(1)[0]
-        resp = self.app.get(
+        resp = self.app.patch(
             "{0}".format(BASE_URL), content_type=CONTENT_TYPE_JSON
         )
         self.assertEqual(resp.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
