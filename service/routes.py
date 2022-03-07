@@ -10,22 +10,14 @@ PUT /promotions/{id} - updates a Promotion record in the database
 DELETE /promotions/{id} - deletes a Promotion record in the database
 """
 
-import os
-import sys
-import logging
-from flask import Flask, jsonify, request, url_for, make_response, abort
 
+from flask import abort, jsonify, make_response, request, url_for
 from tests.test_routes import CONTENT_TYPE_JSON
-from . import status  # HTTP Status Codes
 from werkzeug.exceptions import NotFound
 
-# For this example we'll use SQLAlchemy, a popular ORM that supports a
-# variety of backends including SQLite, MySQL, and PostgreSQL
-from flask_sqlalchemy import SQLAlchemy
-from service.models import Promotion, DataValidationError
+from service.models import Promotion
 
-# Import Flask application
-from . import app
+from . import app, status
 
 ######################################################################
 # GET INDEX
@@ -34,20 +26,19 @@ from . import app
 
 @app.route("/")
 def index():
-    """ Root URL response """
+    """Root URL response"""
     app.logger.info("Request for Root URL")
     return (
         jsonify(
             name="Promotions REST API Service",
             version="1.0",
-            # The line below generates an error in the tests because the route for list_promotions has not been implemented yet.
             # paths=url_for("list_promotions", _external=True),
         ),
         status.HTTP_200_OK,
     )
 
 
-@app.route("/promotions/<int:promotion_id>", methods=['GET'])
+@app.route("/promotions/<int:promotion_id>", methods=["GET"])
 def get_promotions(promotion_id):
     """
     Retrieve a single Promotion
@@ -57,14 +48,13 @@ def get_promotions(promotion_id):
     app.logger.info("Request for promotion with id: %s", promotion_id)
     promotion = Promotion.find(promotion_id)
     if not promotion:
-        raise NotFound(
-            "Promotion with id '{}' was not found.".format(promotion_id))
+        raise NotFound("Promotion with id '{}' was not found.".format(promotion_id))
 
     app.logger.info("Returning promotion: %s", promotion.name)
     return make_response(jsonify(promotion.serialize()), status.HTTP_200_OK)
 
 
-@app.route("/promotions", methods=['POST'])
+@app.route("/promotions", methods=["POST"])
 def create_promotions():
     """Creates a promotion
 
@@ -76,13 +66,13 @@ def create_promotions():
     promotion.deserialize(request.get_json())
     promotion.create()
     message = promotion.serialize()
-    location_url = url_for(
-        "get_promotions", promotion_id=promotion.id, _external=True)
+    location_url = url_for("get_promotions", promotion_id=promotion.id, _external=True)
 
     app.logger.info("Promotion with ID [%s] created.", promotion.id)
     return make_response(
-        jsonify(message), status.HTTP_201_CREATED, {'Location': location_url}
+        jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
     )
+
 
 @app.route("/promotions/<int:promotion_id>", methods=["DELETE"])
 def delete_promotions(promotion_id):
@@ -98,6 +88,7 @@ def delete_promotions(promotion_id):
     app.logger.info("Promotion with ID [%s] delete complete.", promotion_id)
     return make_response("", status.HTTP_204_NO_CONTENT)
 
+
 @app.route("/promotions/<int:promotion_id>", methods=["PUT"])
 def update_promotions(promotion_id):
     """
@@ -112,16 +103,15 @@ def update_promotions(promotion_id):
 
     promotion: Promotion = Promotion.find(promotion_id)
     if not promotion:
-        raise NotFound(
-            "Cannot find promotion with id {}. ".format(promotion_id)
-        )
-    
+        raise NotFound("Cannot find promotion with id {}. ".format(promotion_id))
+
     promotion.deserialize(request.get_json())
     promotion.update()
     app.logger.info("Promotion with id {} has been updated.".format(promotion_id))
     message = promotion.serialize()
 
     return make_response(jsonify(message), status.HTTP_200_OK)
+
 
 @app.route("/promotions", methods=["GET"])
 def list_promotions():
@@ -141,6 +131,7 @@ def list_promotions():
     app.logger.info("Returning %d promotions", len(results))
     return make_response(jsonify(results), status.HTTP_200_OK)
 
+
 ######################################################################
 #  U T I L I T Y   F U N C T I O N S
 ######################################################################
@@ -159,6 +150,6 @@ def check_content_type(media_type):
 
 
 def init_db():
-    """ Initializes the SQLAlchemy app """
+    """Initializes the SQLAlchemy app"""
     global app
     Promotion.init_db(app)

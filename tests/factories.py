@@ -13,6 +13,7 @@ class PromotionFactory(factory.Factory):
 
     class Meta:
         """Maps factory to data model"""
+
         model = Promotion
 
     id = factory.Sequence(lambda n: n)
@@ -25,7 +26,7 @@ class PromotionFactory(factory.Factory):
         datetime(2022, 1, 21, tzinfo=timezone.utc),
         datetime(2022, 2, 27, tzinfo=timezone.utc),
     )
-    type = FuzzyChoice(choices=[Type.Value, Type.Percentage, Type.Unknown])
+    type = FuzzyChoice(choices=[Type.VALUE, Type.PERCENTAGE, Type.UNKNOWN])
     value = FuzzyFloat(1.0, 99.0)
     ongoing = FuzzyChoice(choices=[True, False])
     product_id = factory.Sequence(lambda n: n)
