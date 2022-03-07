@@ -14,6 +14,8 @@ import os
 import sys
 import logging
 from flask import Flask, jsonify, request, url_for, make_response, abort
+
+from tests.test_routes import CONTENT_TYPE_JSON
 from . import status  # HTTP Status Codes
 from werkzeug.exceptions import NotFound
 
@@ -95,6 +97,32 @@ def delete_promotions(promotion_id):
 
     app.logger.info("Promotion with ID [%s] delete complete.", promotion_id)
     return make_response("", status.HTTP_204_NO_CONTENT)
+
+@app.route("/promotions/<int:promotion_id>", methods=["PUT"])
+def update_promotions(promotion_id):
+    """
+    Update promotion value
+    This endpoint updates the promotion value of a promotion currently stored in database.
+
+    Args:
+        promotion_id (int): the id of promotion in integer
+    """
+    app.logger.info("Request to update promotion with id: %s; ", promotion_id)
+    check_content_type(CONTENT_TYPE_JSON)
+
+    promotion: Promotion = Promotion.find(promotion_id)
+    if not promotion:
+        raise NotFound(
+            "Cannot find promotion with id {}. ".format(promotion_id)
+        )
+    
+    promotion.deserialize(request.get_json())
+    promotion.update()
+    app.logger.info("Promotion with id {} has been updated.".format(promotion_id))
+    message = promotion.serialize()
+
+    return make_response(jsonify(message), status.HTTP_200_OK)
+
 
 ######################################################################
 #  U T I L I T Y   F U N C T I O N S

@@ -153,6 +153,39 @@ class TestPromotionServer(TestCase):
         )
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
 
+    def test_update_promotion(self):
+        """Update a Promotion"""
+        # create a promotion to update
+        test_promotion = PromotionFactory()
+        resp = self.app.post(
+            BASE_URL, json=test_promotion.serialize(), content_type=CONTENT_TYPE_JSON
+        )
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+
+        # update the promotion
+        new_promotion = resp.get_json()
+        logging.debug(new_promotion)
+        new_promotion["value"] = 0.2
+        promotion_name = "hello"
+        new_promotion["name"] = promotion_name
+        resp = self.app.put(
+            "/promotions/{}".format(new_promotion["id"]),
+            json=new_promotion,
+            content_type=CONTENT_TYPE_JSON,
+        )
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        updated_promotion = resp.get_json()
+        self.assertEqual(updated_promotion["value"], 0.2)
+        self.assertEqual(updated_promotion["name"], promotion_name)
+    
+        # Attempt to update non-existing promotion
+        resp = self.app.put(
+            "/promotions/{}".format(2022),
+            json=new_promotion,
+            content_type=CONTENT_TYPE_JSON,
+        )
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+    
     def test_method_not_supported_error(self):
         """ Test Method Not Supported Error """
         test_promotion = self._create_promotions(1)[0]
