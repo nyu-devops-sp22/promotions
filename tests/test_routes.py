@@ -9,7 +9,6 @@ import logging
 import os
 from unittest import TestCase
 # from unittest.mock import MagicMock, patch
-
 from service import app, status  # HTTP Status Codes
 from service.models import db, init_db
 
@@ -76,6 +75,14 @@ class TestPromotionServer(TestCase):
         """ Test index call """
         resp = self.app.get("/")
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
+
+    def test_get_promotion_list(self):
+        """Get a list of Promotions"""
+        self._create_promotions(5)
+        resp = self.app.get(BASE_URL)
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        data = resp.get_json()
+        self.assertEqual(len(data), 5)
 
     def test_get_promotion(self):
         """Get a single Promotion"""
@@ -186,10 +193,25 @@ class TestPromotionServer(TestCase):
         )
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
     
+    def test_query_promotion_list_by_product_id(self):
+        """Query Promotions by product_id"""
+        promotions = self._create_promotions(10)
+        test_product_id = promotions[0].product_id
+        product_id_promotions = [promotion for promotion in promotions if promotion.product_id == test_product_id]
+        resp = self.app.get(
+            BASE_URL, query_string="product_id={}".format(test_product_id)
+        )
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        data = resp.get_json()
+        self.assertEqual(len(data), len(product_id_promotions))
+        # check the data just to be sure
+        for promotion in data:
+            self.assertEqual(promotion["product_id"], test_product_id)
+
     def test_method_not_supported_error(self):
         """ Test Method Not Supported Error """
         test_promotion = self._create_promotions(1)[0]
-        resp = self.app.get(
+        resp = self.app.patch(
             "{0}".format(BASE_URL), content_type=CONTENT_TYPE_JSON
         )
         self.assertEqual(resp.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)

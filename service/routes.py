@@ -123,6 +123,23 @@ def update_promotions(promotion_id):
 
     return make_response(jsonify(message), status.HTTP_200_OK)
 
+@app.route("/promotions", methods=["GET"])
+def list_promotions():
+    """Returns all of the promotions"""
+    app.logger.info("Request for promotion list")
+    promotions = []
+    product_id = request.args.get("product_id")
+    name = request.args.get("name")
+    if product_id:
+        promotions = Promotion.find_by_product_id(product_id)
+    elif name:
+        promotions = Promotion.find_by_name(name)
+    else:
+        promotions = Promotion.all()
+
+    results = [promotion.serialize() for promotion in promotions]
+    app.logger.info("Returning %d promotions", len(results))
+    return make_response(jsonify(results), status.HTTP_200_OK)
 
 ######################################################################
 #  U T I L I T Y   F U N C T I O N S
