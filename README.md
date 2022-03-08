@@ -53,7 +53,6 @@ To create a promotion, we use the `POST` HTTP method with the url: `http://local
 ```
 {
     "name": "10% Sale", 
-    "code": "sale10",
     "start_date": "01-01-2022 10:10:10",
     "end_date": "04-05-2022 10:10:10",
     "type": "Value",
