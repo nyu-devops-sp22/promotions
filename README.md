@@ -1,21 +1,33 @@
 # Promotions API
 
-### Instructions on running tests:
+## Project Setup
 
-To run the tests, First
+To clone the project to local, run in terminal:
+
 ```shell
 $ git clone https://github.com/nyu-devops-sp22/promotions.git
+```
+
+To start developing with Visual Studio Code and Docker, navigate to the repo and use ```code``` command
+
+```shell
 $ cd promotions
 $ code .
 ```
-Then, inside VSCode window, click `Reopen in Container`. Afterward, run the tests
+
+Then, inside VSCode window, click `Reopen in Container`.
+
+## Running tests
+
+To run the tests, run ```nosetests``` in terminal
+
 ```shell
 $ nosetests
 ```
 
-### Instructions on running services:
+## Running services
 
-To start service, use flask run in terminal:
+To start service, run ```flask run``` in terminal:
 
 ```shell
 $ flask run
@@ -23,24 +35,24 @@ $ flask run
 
 You should be able to reach the service at: http://127.0.0.1:8000.
 
-#### Promotions
+### Promotion routes
 
 Routes | HTTP response | Description
 --- | --- | ---
-`GET /` | 200 if succeeds | Root URL response
-`GET /promotions`  | 200 if succeeds | List all promotions
-`GET /promotions/:id` |  200 if succeeds | Get a promotion with specified ID
-`POST /promotions` | 201 if succeeds | Create a promotion
-`DELETE /promotions/:id` | 204 if succeeds | Delete a promotion
-`PUT  /promotions/:id` | 200 if succeeds; 404 if not exist | Update a promotion
+`GET /` | 200 OK | Root URL response
+`GET /promotions`  | 200 OK | List all promotions
+`GET /promotions/:id` |  200 OK | Get a promotion with specified ID
+`POST /promotions` | 201 CREATED | Create a promotion
+`DELETE /promotions/:id` | 204 DELETED | Delete a promotion
+`PUT  /promotions/:id` | 200 OK | Update a promotion
 
 ### Create Promotion
 
-To create a promotion, we use the `POST` HTTP method with the url: `http://localhost:5000/promotions`. The json object that has to be passed in order to create a promotion needs to be of the form: 
+To create a promotion, we use the `POST` HTTP method with the url: `http://localhost:8000/promotions`. The json object that has to be passed in order to create a promotion needs to be of the form: 
 
 ```
 {
-    "name": "10% Sale",
+    "name": "10% Sale", 
     "code": "sale10",
     "start_date": "01-01-2022 10:10:10",
     "end_date": "04-05-2022 10:10:10",
@@ -67,7 +79,7 @@ The HTTP response, in this case would be:
 
 ### List Promotions
 
-To list all promotions, we use the HTTP method `GET` and the url `http://localhost:5000/promotions`. 
+To list all promotions, we use the HTTP method `GET` and the url `http://localhost:8000/promotions`. 
 
 The HTTP response should be similar to the json code below.
 ```
@@ -97,7 +109,7 @@ The HTTP response should be similar to the json code below.
 
 ### Get Promotion
 
-To get a specific promotion, for example, the promotion with id equal to 2, we can use the `GET` HTTP method with the url `http://localhost:5000/promotions/2`. In this case, the response would be a json object like: 
+To get a specific promotion, for example, the promotion with id equal to 2, we can use the `GET` HTTP method with the url `http://localhost:8000/promotions/2`. In this case, the response would be a json object like: 
 
 ```
 {
@@ -112,3 +124,7 @@ To get a specific promotion, for example, the promotion with id equal to 2, we c
 }
 
 ```
+
+### Update promotion
+
+To update a promotion with specified promotion id, we use `PUT` HTTP method with url `http://localhost:8000/promotions/id`. The promotion data is represented as json object in HTTP body like creating promotion. The returned response is a json object which is the updated promotion if the request succeeds.
