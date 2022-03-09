@@ -17,7 +17,7 @@ end_date (datetime) - the date the promotion ends (can be null)
 type - the promotion type (value off, percentage off etc.)
 value (number) - the discounted value the promotion applies to products
 ongoing (boolean) - True for promotions that are ongoing
-product_id (Integer) - product id that's part of the promotion 
+product_id (Integer) - product id that's part of the promotion
 
 """
 import logging
@@ -40,15 +40,14 @@ def init_db(app):
 
 class DataValidationError(Exception):
     """ Used for an data validation errors when deserializing """
-    pass
 
 
 class Type(Enum):
     """Enumeration of valid Promotion Types"""
 
-    Value = 0  # $10 off, $20 off etc.
-    Percentage = 1  # 10% off, 20% off etc.
-    Unknown = 3
+    VALUE = 0  # $10 off, $20 off etc.
+    PERCENTAGE = 1  # 10% off, 20% off etc.
+    UNKNOWN = 3
 
 
 class Promotion(db.Model):
@@ -137,14 +136,16 @@ class Promotion(db.Model):
                     + str(type(data['name']))
                 )
             if isinstance(data['start_date'], str):
-                self.start_date = parse_datetime_optional_timezone(data['start_date'])
+                self.start_date = parse_datetime_optional_timezone(
+                    data['start_date'])
             else:
                 raise DataValidationError(
                     "Invalid type for string [start_date]: "
                     + str(type(data['start_date']))
                 )
             if isinstance(data['end_date'], str):
-                self.end_date = parse_datetime_optional_timezone(data['end_date'])
+                self.end_date = parse_datetime_optional_timezone(
+                    data['end_date'])
             elif data['end_date'] is None:
                 self.end_date = None
             else:
@@ -253,11 +254,13 @@ class Promotion(db.Model):
         logger.info("Processing product_id query for %s ...", product_id)
         return cls.query.filter(cls.product_id == product_id)
 
+
 def parse_datetime_optional_timezone(time_str):
+    """Parse datetime object from a string `time_str`"""
     time_str = time_str.strip()
     try:
         return datetime.strptime(time_str, "%m-%d-%Y %H:%M:%S %z")
     except:
-        dt = datetime.strptime(time_str, "%m-%d-%Y %H:%M:%S")
-        dt.replace(tzinfo=timezone.utc)
-        return dt
+        date = datetime.strptime(time_str, "%m-%d-%Y %H:%M:%S")
+        date.replace(tzinfo=timezone.utc)
+        return date
