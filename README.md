@@ -81,9 +81,9 @@ The parameters in the JSON object are defined in the table below.
 Name | Type | Description
 --- | --- | ---
 `name` | string | The name of the promotion that we want to create
-`start_date`  | date | The start date of the promotion. The format should be: `%m-%d-%Y %H:%M:%S`
-`end_date` |  date | The end date of the promotion. The format should be: `%m-%d-%Y %H:%M:%S`
-`type` | enum(`VALUE`, `PERCENTAGE`, `UNKNOWN`) | The type of the promotion. If the type is `VALUE`, then the numerical value of the `VALUE` specifies the value to be deducted. If type is `PERCENTAGE` then `VALUE` specifies the percentage that should be deducted from the price.
+`start_date`  | string | The start date of the promotion. The format should be: `%m-%d-%Y %H:%M:%S`. The default timezone is in UTC (+0000). You can provide custom timezone info in format `%m-%d-%Y %H:%M:%S %z` (e.g. `01-01-2022 00:00:00 -0400`).
+`end_date` | string | The end date of the promotion. The format should be: `%m-%d-%Y %H:%M:%S`. The default timezone is in UTC (+0000). You can provide custom timezone info in format `%m-%d-%Y %H:%M:%S %z` (e.g. `01-01-2022 00:00:00 -0400`).
+`type` | enum(`VALUE`, `PERCENTAGE`, `UNKNOWN`) in string | The type of the promotion. If the type is `VALUE`, then the numerical value of the `VALUE` specifies the value to be deducted. If type is `PERCENTAGE` then `VALUE` specifies the percentage that should be deducted from the price.
 `value` | number | Numerical value representing the amount that should be deducted from the product in the promotion. The way the value is calculated is dictated by the `type` field.
 `ongoing` | boolean | Specifies the status of the promotion. If true, then the promotion is active, else, the promotion is not active.
 
