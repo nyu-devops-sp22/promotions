@@ -55,7 +55,7 @@ To create a promotion, we use the `POST` HTTP method with the url: `http://local
     "name": "10% Sale", 
     "start_date": "01-01-2022 10:10:10",
     "end_date": "04-05-2022 10:10:10",
-    "type": "Value",
+    "type": "VALUE",
     "value": 10.0,
     "ongoing": true,
     "product_id": 1
@@ -100,7 +100,7 @@ The HTTP response should be similar to the JSON code below.
         "ongoing": true,
         "product_id": 1,
         "start_date": "01-01-2022 10:10:10 ",
-        "type": "Value",
+        "type": "VALUE",
         "value": 10.0
     },
     {
@@ -110,7 +110,7 @@ The HTTP response should be similar to the JSON code below.
         "ongoing": true,
         "product_id": 3,
         "start_date": "01-01-2022 01:10:10 ",
-        "type": "Value",
+        "type": "VALUE",
         "value": 20.0
     }
 ]
@@ -128,7 +128,7 @@ To get a specific promotion, for example, the promotion with id equal to 2, we c
     "ongoing": true,
     "product_id": 1,
     "start_date": "01-01-2022 10:10:10 ",
-    "type": "Value",
+    "type": "VALUE",
     "value": 10.0
 }
 
