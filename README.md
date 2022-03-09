@@ -17,7 +17,7 @@ $ code .
 
 Then, inside VSCode window, click `Reopen in Container`.
 
-## Running tests
+## Running Tests
 
 To run the tests, run ```nosetests``` in terminal
 
@@ -25,7 +25,7 @@ To run the tests, run ```nosetests``` in terminal
 $ nosetests
 ```
 
-## Running services
+## Running Services
 
 To start service, run ```flask run``` in terminal:
 
@@ -35,7 +35,7 @@ $ flask run
 
 You should be able to reach the service at: http://127.0.0.1:8000.
 
-### Promotion routes
+### Promotion Routes
 
 Routes | HTTP response | Description
 --- | --- | ---
@@ -48,7 +48,7 @@ Routes | HTTP response | Description
 
 ### Create Promotion
 
-To create a promotion, we use the `POST` HTTP method with the url: `http://localhost:8000/promotions`. The json object that has to be passed in order to create a promotion needs to be of the form: 
+To create a promotion, we use the `POST` HTTP method with the url: `http://localhost:8000/promotions`. The JSON object that has to be passed in order to create a promotion needs to be of the form:
 
 ```
 {
@@ -71,16 +71,26 @@ The HTTP response, in this case would be:
     "ongoing": true,
     "product_id": 1,
     "start_date": "01-01-2022 10:10:10 ",
-    "type": "Value",
+    "type": "VALUE",
     "value": 10.0
 }
 ```
 
+The parameters in the JSON object are defined in the table below.
+
+Name | Type | Description
+--- | --- | ---
+`name` | string | The name of the promotion that we want to create
+`start_date`  | date | The start date of the promotion. The format should be: `%m-%d-%Y %H:%M:%S`
+`end_date` |  date | The end date of the promotion. The format should be: `%m-%d-%Y %H:%M:%S`
+`type` | enum(`VALUE`, `PERCENTAGE`, `UNKNOWN`) | The type of the promotion. If the type is `VALUE`, then the numerical value of the `VALUE` specifies the value to be deducted. If type is `PERCENTAGE` then `VALUE` specifies the percentage that should be deducted from the price.
+`value` | number | Numerical value representing the amount that should be deducted from the product in the promotion. The way the value is calculated is dictated by the `type` field.
+`ongoing` | boolean | Specifies the status of the promotion. If true, then the promotion is active, else, the promotion is not active.
+
 ### List Promotions
 
-To list all promotions, we use the HTTP method `GET` and the url `http://localhost:8000/promotions`. 
-
-The HTTP response should be similar to the json code below.
+To list all promotions, we use the HTTP method `GET` and the url `http://localhost:8000/promotions`.
+The HTTP response should be similar to the JSON code below.
 ```
 [
     {
@@ -108,7 +118,7 @@ The HTTP response should be similar to the json code below.
 
 ### Get Promotion
 
-To get a specific promotion, for example, the promotion with id equal to 2, we can use the `GET` HTTP method with the url `http://localhost:8000/promotions/2`. In this case, the response would be a json object like: 
+To get a specific promotion, for example, the promotion with id equal to 2, we can use the `GET` HTTP method with the url `http://localhost:8000/promotions/2`. In this case, the response would be a JSON object like: 
 
 ```
 {
@@ -124,6 +134,10 @@ To get a specific promotion, for example, the promotion with id equal to 2, we c
 
 ```
 
-### Update promotion
+### Update Promotion
 
-To update a promotion with specified promotion id, we use `PUT` HTTP method with url `http://localhost:8000/promotions/id`. The promotion data is represented as json object in HTTP body like creating promotion. The returned response is a json object which is the updated promotion if the request succeeds.
+To update a promotion with specified promotion id, we use `PUT` HTTP method with url `http://localhost:8000/promotions/id`. The promotion data is represented as JSON object in HTTP body like creating promotion. The returned response is a JSON object which is the updated promotion if the request succeeds.
+
+### Delete Promotion
+
+To delete a promotion, use the `DELETE` HTTP method with the url `http://localhost:8000/promotions/id`.
