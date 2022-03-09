@@ -33,7 +33,7 @@ To start service, run ```flask run``` in terminal:
 $ flask run
 ```
 
-You should be able to reach the service at: http://127.0.0.1:8000.
+You should be able to reach the service at: http://127.0.0.1:5000.
 
 ### Promotion Routes
 
@@ -48,7 +48,7 @@ Routes | HTTP response | Description
 
 ### Create Promotion
 
-To create a promotion, we use the `POST` HTTP method with the url: `http://localhost:8000/promotions`. The JSON object that has to be passed in order to create a promotion needs to be of the form:
+To create a promotion, we use the `POST` HTTP method with the url: `http://localhost:5000/promotions`. The JSON object that has to be passed in order to create a promotion needs to be of the form:
 
 ```
 {
@@ -89,7 +89,7 @@ Name | Type | Description
 
 ### List Promotions
 
-To list all promotions, we use the HTTP method `GET` and the url `http://localhost:8000/promotions`.
+To list all promotions, we use the HTTP method `GET` and the url `http://localhost:5000/promotions`.
 The HTTP response should be similar to the JSON code below.
 ```
 [
@@ -118,7 +118,7 @@ The HTTP response should be similar to the JSON code below.
 
 ### Get Promotion
 
-To get a specific promotion, for example, the promotion with id equal to 2, we can use the `GET` HTTP method with the url `http://localhost:8000/promotions/2`. In this case, the response would be a JSON object like: 
+To get a specific promotion, for example, the promotion with id equal to 2, we can use the `GET` HTTP method with the url `http://localhost:5000/promotions/2`. In this case, the response would be a JSON object like: 
 
 ```
 {
@@ -136,8 +136,8 @@ To get a specific promotion, for example, the promotion with id equal to 2, we c
 
 ### Update Promotion
 
-To update a promotion with specified promotion id, we use `PUT` HTTP method with url `http://localhost:8000/promotions/id`. The promotion data is represented as JSON object in HTTP body like creating promotion. The returned response is a JSON object which is the updated promotion if the request succeeds.
+To update a promotion with specified promotion id, we use `PUT` HTTP method with url `http://localhost:5000/promotions/id`. The promotion data is represented as JSON object in HTTP body like creating promotion. The returned response is a JSON object which is the updated promotion if the request succeeds.
 
 ### Delete Promotion
 
-To delete a promotion, use the `DELETE` HTTP method with the url `http://localhost:8000/promotions/id`.
+To delete a promotion, use the `DELETE` HTTP method with the url `http://localhost:5000/promotions/id`.
