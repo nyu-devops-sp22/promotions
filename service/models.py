@@ -20,6 +20,8 @@ ongoing (boolean) - True for promotions that are ongoing
 product_id (Integer) - product id that's part of the promotion
 
 """
+import os
+import json
 import logging
 from datetime import datetime, timezone
 from enum import Enum
@@ -31,6 +33,9 @@ logger = logging.getLogger("flask.app")
 
 # Create the SQLAlchemy object to be initialized later in init_db()
 db = SQLAlchemy()
+
+
+database_uri = os.environ['DATABASE_URI']
 
 
 def init_db(app):
