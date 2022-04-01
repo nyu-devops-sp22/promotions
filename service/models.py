@@ -34,8 +34,6 @@ logger = logging.getLogger("flask.app")
 # Create the SQLAlchemy object to be initialized later in init_db()
 db = SQLAlchemy()
 
-# database_uri = os.environ['DATABASE_URI']
-
 def init_db(app):
     """Initialize the SQLAlchemy app"""
     Promotion.init_db(app)
