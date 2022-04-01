@@ -1,10 +1,10 @@
 ---
-# This manifest deploys a Python Flask application with a Postgre database
+# This manifest deploys a Python Flask application with a ElephantSQL database
 applications:
 - name: nyu-promotion-service-sp2203
   path: .
   instances: 2
-  memory: 64M
+  memory: 256M
   routes:
   - route: nyu-promotion-service-sp2203.us-south.cf.appdomain.cloud
   disk_quota: 1024M
