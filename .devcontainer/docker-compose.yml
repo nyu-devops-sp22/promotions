@@ -19,7 +19,7 @@ services:
       GUNICORN_BIND: "0.0.0.0:8000"
       DATABASE_URI: postgresql://postgres:postgres@postgres:5432/postgres
     networks:
-      - web
+      - dev
     depends_on:
       - postgres
 
@@ -32,10 +32,10 @@ services:
     volumes:
       - postgres:/var/lib/postgresql/data
     networks:
-      - web
+      - dev
 
 volumes:
   postgres:
 
 networks:
-  web:
+  dev:
