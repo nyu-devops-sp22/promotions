@@ -1,5 +1,6 @@
 # Promotions API
 
+[![.github/workflows/workflow.yml](https://github.com/nyu-devops-sp22/promotions/actions/workflows/workflow.yml/badge.svg)](https://github.com/tomasort/promotions/actions/workflows/workflow.yml)
 ## Project Setup
 
 To clone the project to local, run in terminal:
