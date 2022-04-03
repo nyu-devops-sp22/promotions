@@ -1,6 +1,6 @@
 # Promotions API
 
-[![.github/workflows/workflow.yml](https://github.com/nyu-devops-sp22/promotions/actions/workflows/tdd.yml/badge.svg)](https://github.com/nyu-devops-sp22/promotions/actions/workflows/tdd.yml)
+[![.github/workflows/tdd.yml](https://github.com/nyu-devops-sp22/promotions/actions/workflows/tdd.yml/badge.svg)](https://github.com/nyu-devops-sp22/promotions/actions/workflows/tdd.yml)
 ## Project Setup
 
 To clone the project to local, run in terminal:
