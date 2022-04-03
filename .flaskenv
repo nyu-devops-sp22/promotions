@@ -1,2 +1,1 @@
 FLASK_APP=service:app
-PORT=8000
