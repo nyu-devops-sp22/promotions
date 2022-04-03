@@ -1,6 +1,7 @@
 # Promotions API
 
 [![.github/workflows/tdd.yml](https://github.com/nyu-devops-sp22/promotions/actions/workflows/tdd.yml/badge.svg)](https://github.com/nyu-devops-sp22/promotions/actions/workflows/tdd.yml)
+[![codecov](https://codecov.io/gh/nyu-devops-sp22/promotions/branch/main/graph/badge.svg?token=W0OM0C51G3)](https://codecov.io/gh/nyu-devops-sp22/promotions)
 ## Project Setup
 
 To clone the project to local, run in terminal:
