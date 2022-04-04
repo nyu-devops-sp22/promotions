@@ -12,12 +12,14 @@ DELETE /promotions/{id} - deletes a Promotion record in the database
 
 
 from flask import abort, jsonify, make_response, request, url_for
-from tests.test_routes import CONTENT_TYPE_JSON
+# from tests.test_routes import CONTENT_TYPE_JSON
 from werkzeug.exceptions import NotFound
 
 from service.models import Promotion
 
 from . import app, status
+
+CONTENT_TYPE_JSON = "application/json"
 
 ######################################################################
 # GET INDEX
