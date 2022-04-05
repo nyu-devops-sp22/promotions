@@ -1,4 +1,3 @@
----
 # Python 3 with PostgreSQL
 version: "3"
 
@@ -16,7 +15,7 @@ services:
     environment:
       FLASK_APP: service:app
       FLASK_ENV: development
-      GUNICORN_BIND: "0.0.0.0:8080"
+      # GUNICORN_BIND: "0.0.0.0:8080"
       DATABASE_URI: postgresql://postgres:postgres@postgres:5432/postgres
     networks:
       - dev
@@ -28,6 +27,7 @@ services:
     ports:
       - 5432:5432
     environment:
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     volumes:
       - postgres:/var/lib/postgresql/data

@@ -36,3 +36,7 @@ ENV TERM=xterm-256color
 
 # Become a regular user
 USER $USERNAME
+
+# Run the service
+ENV GUNICORN_BIND 0.0.0.0:$PORT
+CMD ["gunicorn", "--log-file=-", "app:app"]
