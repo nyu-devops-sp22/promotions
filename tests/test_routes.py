@@ -210,6 +210,38 @@ class TestPromotionServer(TestCase):
         )
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
 
+    def test_invalidate_promotion(self):
+        test_promotion = PromotionFactory()
+        test_promotion.ongoing = True
+        logging.debug(test_promotion)
+        resp = self.app.post(
+            BASE_URL, json=test_promotion.serialize(), content_type=CONTENT_TYPE_JSON
+        )
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        returned_promotion = resp.get_json()
+        # invalidate promotion
+        resp = self.app.put(
+            "{0}/{1}/invalidate".format(BASE_URL, returned_promotion["id"]),
+            content_type=CONTENT_TYPE_JSON,
+        )
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        returned_promotion = resp.get_json()
+
+        self.assertFalse(returned_promotion["ongoing"])
+
+        resp = self.app.get(
+            "{0}/{1}".format(BASE_URL, returned_promotion["id"]), 
+            content_type=CONTENT_TYPE_JSON)
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertFalse(resp.get_json()["ongoing"])
+
+        # Attempt to update non-existing promotion
+        resp = self.app.put(
+            "{}/2022/invalidate".format(BASE_URL),
+            content_type=CONTENT_TYPE_JSON,
+        )
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+
     def test_query_promotion_list_by_product_id(self):
         """Query Promotions by product_id"""
         promotions = self._create_promotions(10)
