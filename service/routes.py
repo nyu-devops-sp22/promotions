@@ -131,6 +131,19 @@ def list_promotions():
     app.logger.info("Returning %d promotions", len(results))
     return make_response(jsonify(results), status.HTTP_200_OK)
 
+@app.route("/promotions/<int:promotion_id>/invalidate", methods=["PUT"])
+def invalidate_promotions(promotion_id):
+    """invalidate a promotion"""
+    app.logger.info("Invalidate promotion id: %d", promotion_id)
+    promotion: Promotion = Promotion.find(promotion_id)
+    if not promotion:
+        raise NotFound("Cannot find promotion with id {}. ".format(promotion_id))
+
+    promotion.ongoing = False
+    promotion.update()
+    app.logger.info("Promotion with id {} has been invalidated.".format(promotion_id))
+    return make_response(jsonify(promotion.serialize()), status.HTTP_200_OK)
+
 
 ######################################################################
 #  U T I L I T Y   F U N C T I O N S

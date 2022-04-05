@@ -47,6 +47,7 @@ Routes | HTTP response | Description
 `POST /promotions` | 201 CREATED | Create a promotion
 `DELETE /promotions/:id` | 204 DELETED | Delete a promotion
 `PUT  /promotions/:id` | 200 OK | Update a promotion
+`PUT /promotions/:id/invalidate` | 200 OK | Invalidate a promotion
 
 ### Create Promotion
 
@@ -143,3 +144,7 @@ To update a promotion with specified promotion id, we use `PUT` HTTP method with
 ### Delete Promotion
 
 To delete a promotion, use the `DELETE` HTTP method with the url `http://localhost:8000/promotions/id`.
+
+### Invalidate Promotion
+
+To invalidate a promotion with specified promotion id, we use `PUT` HTTP method with url `http://localhost:8000/promotions/id/invalidate`. The ongoing property in new promotion will be set to false and the promotion will be no longer active. The new promotion will be returned as JSON object in HTTP body.
