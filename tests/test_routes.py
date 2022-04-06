@@ -8,6 +8,7 @@ Test cases can be run with the following:
 import logging
 import os
 from unittest import TestCase
+import datetime
 
 # from unittest.mock import MagicMock, patch
 from service import app, status  # HTTP Status Codes
@@ -261,9 +262,45 @@ class TestPromotionServer(TestCase):
         for promotion in data:
             self.assertEqual(promotion["product_id"], test_product_id)
 
-    # TODO: implement test for query by date 
     def test_query_promotion_by_date(self):
         """Query promotions by date"""
+        promotions = self._create_promotions(10)
+        test_promotion_start_date = promotions[0].start_date
+
+        promotions = [
+            promotion
+            for promotion in promotions
+            if promotion.start_date == test_promotion_start_date
+        ]
+        resp = self.app.get(
+            BASE_URL, query_string="start_date={}".format(test_promotion_start_date.strftime('%m-%d-%Y %H:%M:%S'))
+        )
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        data = resp.get_json()
+        self.assertEqual(len(data), len(promotions))
+        # check the data just to be sure
+        for promotion in data:
+            self.assertEqual(promotion["start_date"].strip(), test_promotion_start_date.strftime('%m-%d-%Y %H:%M:%S'))
+
+    def test_query_promotion_by_date(self):
+        """Query promotions by active on date"""
+        promotions = self._create_promotions(10)
+        test_promotion_date = promotions[0].start_date
+        promotions = [
+            promotion
+            for promotion in promotions
+            if promotion.start_date <= test_promotion_date and promotion.end_date >= test_promotion_date
+        ]
+        resp = self.app.get(
+            BASE_URL, query_string="active_on={}".format(test_promotion_date.strftime('%m-%d-%Y %H:%M:%S'))
+        )
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        data = resp.get_json()
+        self.assertEqual(len(data), len(promotions))
+        # # check the data just to be sure
+        # for promotion in data:
+        #     self.assertEqual(promotion["start_date"].strip(), test_promotion_start_date.strftime('%m-%d-%Y %H:%M:%S'))
+
     
     ######################################################################
     #  T E S T   E R R O R S
