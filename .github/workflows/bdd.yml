@@ -57,9 +57,5 @@ jobs:
             #   env:
             #       BINDING_CLOUDANT: '{"username":"admin","password":"pass","host":"couchdb","port":5984,"url":"http://admin:pass@couchdb:5984"}'
 
-            - name: Run the server locally
-              run: |
-                  honcho start & sleep 10
-
             - name: Run unit tests with behave
               run: behave
