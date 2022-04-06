@@ -59,7 +59,7 @@ jobs:
 
             - name: Run the server locally
               run: |
-                  honcho start
+                  honcho start & sleep 10
 
             - name: Run unit tests with behave
               run: behave
