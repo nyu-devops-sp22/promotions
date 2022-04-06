@@ -38,7 +38,7 @@ jobs:
               run: |
                   apt-get update
                   apt-get install -y gcc libpq-dev
-                  apt-get install -y curl wget python3-selenium
+                  apt-get install -y curl wget python3-selenium chromium-driver
 
             - name: Install packages
               run: |

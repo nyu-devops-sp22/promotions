@@ -20,7 +20,8 @@ RUN groupadd --gid $USER_GID $USERNAME \
     && chmod 0440 /etc/sudoers.d/$USERNAME
 
 # Added libraries for PostgreSQL
-RUN apt-get install -y gcc libpq-dev
+RUN apt-get install -y gcc libpq-dev && \
+    apt-get install -y python3-selenium chromium-driver
 
 # Set up the Python development environment
 WORKDIR /app
