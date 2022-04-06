@@ -229,6 +229,14 @@ class TestPromotionServer(TestCase):
         for promotion in data:
             self.assertEqual(promotion["product_id"], test_product_id)
 
+    # TODO: implement test for query by date 
+    def test_query_promotion_by_date(self):
+        """Query promotions by date"""
+    
+    ######################################################################
+    #  T E S T   E R R O R S
+    ######################################################################
+
     def test_method_not_supported_error(self):
         """Test Method Not Supported Error"""
         test_promotion = self._create_promotions(1)[0]

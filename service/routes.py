@@ -131,6 +131,8 @@ def list_promotions():
     app.logger.info("Returning %d promotions", len(results))
     return make_response(jsonify(results), status.HTTP_200_OK)
 
+# TODO: implement function for querying promotions
+
 
 ######################################################################
 #  U T I L I T Y   F U N C T I O N S
