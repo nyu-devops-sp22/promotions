@@ -122,10 +122,16 @@ def list_promotions():
     promotions = []
     product_id = request.args.get("product_id")
     name = request.args.get("name")
+    start_date = request.args.get("start_date")
+    query_date = request.args.get("active_on")
     if product_id:
         promotions = Promotion.find_by_product_id(product_id)
     elif name:
         promotions = Promotion.find_by_name(name)
+    elif start_date:
+        promotions = Promotion.find_by_start_date(start_date)
+    elif query_date:
+        promotions = Promotion.find_active(query_date)
     else:
         promotions = Promotion.all()
 
@@ -145,7 +151,6 @@ def invalidate_promotions(promotion_id):
     promotion.update()
     app.logger.info("Promotion with id {} has been invalidated.".format(promotion_id))
     return make_response(jsonify(promotion.serialize()), status.HTTP_200_OK)
-
 
 ######################################################################
 #  U T I L I T Y   F U N C T I O N S

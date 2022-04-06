@@ -25,6 +25,7 @@ import json
 import logging
 from datetime import datetime, timezone
 from enum import Enum
+from sqlalchemy import and_
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
@@ -244,6 +245,22 @@ class Promotion(db.Model):
         """
         logger.info("Processing name query for %s ...", name)
         return cls.query.filter(cls.name == name)
+
+    @classmethod
+    def find_active(cls, date):
+        """ Returns the promotions active on a certain date"""
+        if isinstance(date, str) or not isinstance(date, datetime.datetime):
+            date = parse_datetime_optional_timezone(date)
+        logger.info("Processing date query for %s ...", date)
+        return cls.query.filter(and_(cls.start_date <= date , cls.end_date >= date))
+    
+    @classmethod
+    def find_by_start_date(cls, date):
+        """ Finds a Promotion by it's start_date """
+        if isinstance(date, str) or not isinstance(date, datetime.datetime):
+            date = parse_datetime_optional_timezone(date)
+        logger.info("Processing lookup for start_date %s ...", date)
+        return cls.query.filter(cls.start_date == date)
 
     @classmethod
     def find_by_product_id(cls, product_id):
