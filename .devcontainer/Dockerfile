@@ -28,7 +28,7 @@ COPY requirements.txt .
 RUN python -m pip install --upgrade pip wheel && \
     pip install -r requirements.txt
 
-ENV PORT 8000
+ENV PORT 8080
 EXPOSE $PORT
 
 # Enable color terminal for docker exec bash
@@ -36,3 +36,7 @@ ENV TERM=xterm-256color
 
 # Become a regular user
 USER $USERNAME
+
+# Run the service
+ENV GUNICORN_BIND 0.0.0.0:$PORT
+CMD ["gunicorn", "--log-file=-", "app:app"]

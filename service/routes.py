@@ -12,12 +12,14 @@ DELETE /promotions/{id} - deletes a Promotion record in the database
 
 
 from flask import abort, jsonify, make_response, request, url_for
-from tests.test_routes import CONTENT_TYPE_JSON
+# from tests.test_routes import CONTENT_TYPE_JSON
 from werkzeug.exceptions import NotFound
 
 from service.models import Promotion
 
 from . import app, status
+
+CONTENT_TYPE_JSON = "application/json"
 
 ######################################################################
 # GET INDEX
@@ -131,7 +133,22 @@ def list_promotions():
     app.logger.info("Returning %d promotions", len(results))
     return make_response(jsonify(results), status.HTTP_200_OK)
 
+<<<<<<< HEAD
 # TODO: implement function for querying promotions
+=======
+@app.route("/promotions/<int:promotion_id>/invalidate", methods=["PUT"])
+def invalidate_promotions(promotion_id):
+    """invalidate a promotion"""
+    app.logger.info("Invalidate promotion id: %d", promotion_id)
+    promotion: Promotion = Promotion.find(promotion_id)
+    if not promotion:
+        raise NotFound("Cannot find promotion with id {}. ".format(promotion_id))
+
+    promotion.ongoing = False
+    promotion.update()
+    app.logger.info("Promotion with id {} has been invalidated.".format(promotion_id))
+    return make_response(jsonify(promotion.serialize()), status.HTTP_200_OK)
+>>>>>>> main
 
 
 ######################################################################
