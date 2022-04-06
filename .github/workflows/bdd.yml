@@ -45,17 +45,21 @@ jobs:
                   python -m pip install --upgrade pip wheel
                   pip install -r requirements.txt
 
+            # - name: Run the server locally
+            #   run: |
+            #       echo "\n*** CREATING TEST DB ***\n"
+            #       curl -X PUT http://admin:pass@couchdb:5984/test
+            #       echo "\n*** STARTING APPLICATION ***\n"
+            #       gunicorn --log-level=critical --bind=0.0.0.0:8080 service:app &
+            #       sleep 5
+            #       curl -I http://localhost:8080/
+            #       echo "\n*** SERVER IS RUNNING ***"
+            #   env:
+            #       BINDING_CLOUDANT: '{"username":"admin","password":"pass","host":"couchdb","port":5984,"url":"http://admin:pass@couchdb:5984"}'
+
             - name: Run the server locally
               run: |
-                  echo "\n*** CREATING TEST DB ***\n"
-                  curl -X PUT http://admin:pass@couchdb:5984/test
-                  echo "\n*** STARTING APPLICATION ***\n"
-                  gunicorn --log-level=critical --bind=0.0.0.0:8080 service:app &
-                  sleep 5
-                  curl -I http://localhost:8080/
-                  echo "\n*** SERVER IS RUNNING ***"
-              env:
-                  BINDING_CLOUDANT: '{"username":"admin","password":"pass","host":"couchdb","port":5984,"url":"http://admin:pass@couchdb:5984"}'
+                  honcho start
 
             - name: Run unit tests with behave
               run: behave
