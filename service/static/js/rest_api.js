@@ -6,25 +6,30 @@ $(function () {
 
     // Updates the form with data from the response
     function update_form_data(res) {
-        $("#promotion_id").val(res._id);
+        $("#promotion_id").val(res.id);
         $("#promotion_name").val(res.name);
-        $("#promotion_category").val(res.category);
-        if (res.available == true) {
-            $("#promotion_available").val("true");
+        $("#promotion_start_date").val(res.start_date);
+        $("#promotion_end_date").val(res.end_date);
+        $("#promotion_type").val(res.type);
+        $("#promotion_value").val(res.value);
+        $("#promotion_product_id").val(res.product_id);
+        if (res.ongoing == true) {
+            $("#promotion_ongoing").val("true");
         } else {
-            $("#promotion_available").val("false");
+            $("#promotion_ongoing").val("false");
         }
-        // $("#promotion_gender").val(res.gender);
-        // $("#promotion_birthday").val(res.birthday);
     }
 
     /// Clears all form fields
     function clear_form_data() {
+        $("#promotion_id").val("");
         $("#promotion_name").val("");
-        $("#promotion_category").val("");
-        $("#promotion_available").val("");
-        $("#promotion_gender").val("");
-        $("#promotion_birthday").val("");
+        $("#promotion_start_date").val("");
+        $("#promotion_end_date").val("");
+        $("#promotion_type").val("");
+        $("#promotion_value").val("");
+        $("#promotion_product_id").val("");
+        $("#promotion_ongoing").val("");
     }
 
     // Updates the flash message area
@@ -40,17 +45,21 @@ $(function () {
     $("#create-btn").click(function () {
 
         let name = $("#promotion_name").val();
-        let category = $("#promotion_category").val();
-        let available = $("#promotion_available").val() == "true";
-        let gender = $("#promotion_gender").val();
-        let birthday = $("#promotion_birthday").val();
+        let start_date = $("#promotion_start_date").val();
+        let end_date = $("#promotion_end_date").val();
+        let type = $("#promotion_type").val();
+        let ongoing = $("#promotion_ongoing").val() == "true";
+        let product_id = parseInt($("#promotion_product_id").val());
+        let value = parseFloat($("#promotion_value").val());
 
         let data = {
             "name": name,
-            "category": category,
-            "available": available,
-            "gender": gender,
-            "birthday": birthday
+            "start_date": start_date,
+            "end_date": end_date,
+            "type": type,
+            "ongoing": ongoing,
+            "product_id": product_id,
+            "value": value,
         };
 
         $("#flash_message").empty();
