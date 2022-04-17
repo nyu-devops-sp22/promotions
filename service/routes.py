@@ -30,14 +30,13 @@ CONTENT_TYPE_JSON = "application/json"
 def index():
     """Root URL response"""
     app.logger.info("Request for Root URL")
-    return (
-        jsonify(
-            name="Promotions REST API Service",
-            version="1.0",
-            # paths=url_for("list_promotions", _external=True),
-        ),
-        status.HTTP_200_OK,
-    )
+    return app.send_static_file("index.html")
+    
+@app.route("/service")
+def service():
+    """UI for promotion service"""
+    app.logger.info("Request for service page")
+    return app.send_static_file("service.html")
 
 ######################################################################
 # Configure Swagger before initializing it
