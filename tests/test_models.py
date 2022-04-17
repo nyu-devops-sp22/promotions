@@ -213,6 +213,26 @@ class TestPromotion(unittest.TestCase):
         self.assertEqual(promotion.value, example.value)
         self.assertEqual(promotion.ongoing, example.ongoing)
         self.assertEqual(promotion.product_id, example.product_id)
+    
+    def test_deserialize_special_promotion(self):
+        """Test deserialization of a special Promotion (no end date and value is int)"""
+        example = PromotionFactory()
+        example.end_date = None
+        example.value = 1
+        data = example.serialize()
+        promotion = Promotion()
+        promotion.deserialize(data)
+        self.assertNotEqual(promotion, None)
+        self.assertEqual(promotion.id, None)
+        self.assertEqual(promotion.name, example.name)
+        self.assertEqual(
+            promotion.start_date,
+            datetime.strptime(data["start_date"], "%m-%d-%Y %H:%M:%S %z"),
+        )
+        self.assertEqual(promotion.type, example.type)
+        self.assertEqual(promotion.value, example.value)
+        self.assertEqual(promotion.ongoing, example.ongoing)
+        self.assertEqual(promotion.product_id, example.product_id)
 
     def test_deserialize_bad_data(self):
         """Test deserialization of bad data"""
