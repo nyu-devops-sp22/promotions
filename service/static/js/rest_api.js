@@ -14,8 +14,8 @@ $(function () {
         } else {
             $("#promotion_available").val("false");
         }
-        $("#promotion_gender").val(res.gender);
-        $("#promotion_birthday").val(res.birthday);
+        // $("#promotion_gender").val(res.gender);
+        // $("#promotion_birthday").val(res.birthday);
     }
 
     /// Clears all form fields
