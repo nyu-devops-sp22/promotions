@@ -81,6 +81,11 @@ class TestPromotionServer(TestCase):
         """Test index call"""
         resp = self.app.get("/")
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
+    
+    def test_service(self):
+        """Test service call"""
+        resp = self.app.get("/service")
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
 
     def test_get_promotion_list(self):
         """Get a list of Promotions"""

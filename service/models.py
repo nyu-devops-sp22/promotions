@@ -166,6 +166,8 @@ class Promotion(db.Model):
                 )
             if isinstance(data['value'], float):
                 self.value = data['value']
+            elif isinstance(data['value'], int):
+                self.value = float(data['value'])
             else:
                 raise DataValidationError(
                     "Invalid type for float [value]: "

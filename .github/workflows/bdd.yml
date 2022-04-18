@@ -59,13 +59,15 @@ jobs:
 
             - name: Run the server locally
               run: |
-                honcho start & sleep 5
+                gunicorn --log-file=- --workers=1 --bind=0.0.0.0:8080 --log-level=info service:app & 
+                sleep 5
+                curl -I http://localhost:8080/
+                echo "\n*** SERVER IS RUNNING ***"
               env:
                 POSTGRES_HOST: postgres
                 POSTGRES_PORT: 5432
                 FLASK_APP: service:app
                 FLASK_ENV: development
-                GUNICORN_BIND: "0.0.0.0:8000"
                 DATABASE_URI: postgresql://postgres:postgres@postgres:5432/postgres
 
             - name: Run unit tests with behave
