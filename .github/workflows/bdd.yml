@@ -59,7 +59,7 @@ jobs:
 
             - name: Run the server locally
               run: |
-                gunicorn --log-file=- --workers=1 --bind=0.0.0.0:$8080 --log-level=info service:app & 
+                gunicorn --log-file=- --workers=1 --bind=0.0.0.0:8080 --log-level=info service:app & 
                 sleep 5
                 curl -I http://localhost:8080/
                 echo "\n*** SERVER IS RUNNING ***"
