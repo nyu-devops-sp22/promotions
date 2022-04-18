@@ -68,7 +68,7 @@ jobs:
                 POSTGRES_PORT: 5432
                 FLASK_APP: service:app
                 FLASK_ENV: development
-                DATABASE_URI: postgresql://postgres:postgres@postgres:5432/testdb
+                DATABASE_URI: postgresql://postgres:postgres@postgres:5432/postgres
 
             - name: Run unit tests with behave
               run: behave
