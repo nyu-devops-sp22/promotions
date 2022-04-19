@@ -38,7 +38,7 @@ def step_impl(context):
     expect(context.resp.status_code).to_equal(200)
     for promotion in context.resp.json():
         context.resp = requests.delete(
-            context.base_url + '/promotions/' + str(promotion["_id"]), headers=headers)
+            context.base_url + '/promotions/' + str(promotion["id"]), headers=headers)
         expect(context.resp.status_code).to_equal(204)
 
     # load the database with new promotions
@@ -49,9 +49,9 @@ def step_impl(context):
             "start_date": row["start_date"],
             "end_date": row["end_date"],
             "type": row["type"],
-            "value": row["value"],
+            "value": float(row["value"]),
             "ongoing": row["ongoing"] in ["True", "true", "1"],
-            "product_id": row["product_id"]
+            "product_id": int(row["product_id"]),
         }
         payload = json.dumps(data)
         context.resp = requests.post(create_url, data=payload, headers=headers)

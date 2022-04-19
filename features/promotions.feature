@@ -5,10 +5,10 @@ Feature: The promotions micro-service back-end
 
 Background:
     Given the following promotions
-        | name          | start_date     | end_date    | type       | value  | ongoing    | product_id |
-        | BigDiscount   | 03-15-2020     | 08-15-2020  | VALUE      | 10     | False      | 20         |
-        | SmallDisCount | 08-19-2021     | 10-19-2021  | PERCENTAGE | 0.3    | False      | 15         |
-        | Another       | 01-05-2022     | 05-09-2022  | VALUE      | 20     | True       | 19         |
+        | name          | start_date              | end_date             | type       | value   | ongoing    | product_id |
+        | BigDiscount   | 03-15-2020 00:00:00     | 08-15-2020 00:00:00  | VALUE      | 10.0    | False      | 20         |
+        | SmallDisCount | 08-19-2021 00:00:00     | 10-19-2021 00:00:00  | PERCENTAGE | 0.3     | False      | 15         |
+        | Another       | 01-05-2022 00:00:00     | 05-09-2022 00:00:00  | VALUE      | 20.0    | True       | 19         |
 
 Scenario: The server is running
     When I visit the "Home Page"
