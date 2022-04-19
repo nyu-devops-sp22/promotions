@@ -32,21 +32,25 @@ from selenium.webdriver.support import expected_conditions
 
 ID_PREFIX = 'promotion_'
 
+
 @when('I visit the "home page"')
 def step_impl(context):
     """ Make a call to the base URL """
     context.driver.get(context.base_url)
     # Uncomment next line to take a screenshot of the web page
-    #context.driver.save_screenshot('home_page.png')
+    # context.driver.save_screenshot('home_page.png')
+
 
 @when(u'I click service')
 def step_impl(context):
     context.driver.get(context.base_url + "/service")
 
+
 @then('I should see "{message}" in the title')
 def step_impl(context, message):
     """ Check the document title for a message """
     expect(context.driver.title).to_contain(message)
+
 
 @when('I set the "{element_name}" to "{text_string}"')
 def step_impl(context, element_name, text_string):
@@ -55,17 +59,20 @@ def step_impl(context, element_name, text_string):
     element.clear()
     element.send_keys(text_string)
 
+
 @when('I select "{text}" in the "{element_name}" dropdown')
 def step_impl(context, text, element_name):
     element_id = ID_PREFIX + element_name.lower().replace(' ', '_')
     element = Select(context.driver.find_element_by_id(element_id))
     element.select_by_visible_text(text)
 
+
 @then('I should see "{text}" in the "{element_name}" dropdown')
 def step_impl(context, text, element_name):
     element_id = ID_PREFIX + element_name.lower().replace(' ', '_')
     element = Select(context.driver.find_element_by_id(element_id))
     expect(element.first_selected_option.text).to_equal(text)
+
 
 @then('the "{element_name}" field should be empty')
 def step_impl(context, element_name):
@@ -76,6 +83,8 @@ def step_impl(context, element_name):
 ##################################################################
 # These two function simulate copy and paste
 ##################################################################
+
+
 @when('I copy the "{element_name}" field')
 def step_impl(context, element_name):
     element_id = ID_PREFIX + element_name.lower().replace(' ', '_')
@@ -84,6 +93,7 @@ def step_impl(context, element_name):
     )
     context.clipboard = element.get_attribute('value')
     logging.info('Clipboard contains: %s', context.clipboard)
+
 
 @when('I paste the "{element_name}" field')
 def step_impl(context, element_name):
@@ -102,10 +112,12 @@ def step_impl(context, element_name):
 # to get the element id of any button
 ##################################################################
 
+
 @when('I press the "{button}" button')
 def step_impl(context, button):
     button_id = button.lower() + '-btn'
     context.driver.find_element_by_id(button_id).click()
+
 
 @then('I should see "{name}" in the results')
 def step_impl(context, name):
@@ -117,11 +129,13 @@ def step_impl(context, name):
     )
     expect(found).to_be(True)
 
+
 @then('I should not see "{name}" in the results')
 def step_impl(context, name):
     element = context.driver.find_element_by_id('search_results')
     error_msg = "I should not see '%s' in '%s'" % (name, element.text)
     ensure(name in element.text, False, error_msg)
+
 
 @then('I should see the message "{message}"')
 def step_impl(context, message):
@@ -140,6 +154,7 @@ def step_impl(context, message):
 # We can then lowercase the name and prefix with pet_ to get the id
 ##################################################################
 
+
 @then('I should see "{text_string}" in the "{element_name}" field')
 def step_impl(context, text_string, element_name):
     element_id = ID_PREFIX + element_name.lower().replace(' ', '_')
@@ -150,6 +165,7 @@ def step_impl(context, text_string, element_name):
         )
     )
     expect(found).to_be(True)
+
 
 @when('I change "{element_name}" to "{text_string}"')
 def step_impl(context, element_name, text_string):
