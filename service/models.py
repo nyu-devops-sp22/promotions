@@ -35,12 +35,15 @@ logger = logging.getLogger("flask.app")
 # Create the SQLAlchemy object to be initialized later in init_db()
 db = SQLAlchemy()
 
+
 def init_db(app):
     """Initialize the SQLAlchemy app"""
     Promotion.init_db(app)
 
+
 class DatabaseConnectionError(Exception):
     """Custom Exception when database connection fails"""
+
 
 class DataValidationError(Exception):
     """ Used for an data validation errors when deserializing """
@@ -256,8 +259,8 @@ class Promotion(db.Model):
         if isinstance(date, str) or not isinstance(date, datetime.datetime):
             date = parse_datetime_optional_timezone(date)
         logger.info("Processing date query for %s ...", date)
-        return cls.query.filter(and_(cls.start_date <= date , cls.end_date >= date))
-    
+        return cls.query.filter(and_(cls.start_date <= date, cls.end_date >= date))
+
     @classmethod
     def find_by_start_date(cls, date):
         """ Finds a Promotion by it's start_date """

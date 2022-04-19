@@ -3,6 +3,13 @@ Feature: The promotions micro-service back-end
     I need a RESTful catalog service
     So that I can keep track of all the promotions
 
+Background:
+    Given the following promotions
+        | name          | start_date     | end_date    | type       | value  | ongoing    | product_id |
+        | BigDiscount   | 03-15-2020     | 08-15-2020  | VALUE      | 10     | False      | 20         |
+        | SmallDisCount | 08-19-2021     | 10-19-2021  | PERCENTAGE | 0.3    | False      | 15         |
+        | Another       | 01-05-2022     | 05-09-2022  | VALUE      | 20     | True       | 19         |
+
 Scenario: The server is running
     When I visit the "Home Page"
     And I click service
@@ -30,12 +37,3 @@ Scenario: Create a Promotion
     And the "Product ID" field should be empty
     And the "Type" field should be empty
     And the "Ongoing" field should be empty
-
-
-    # When I paste the "Id" field
-    # And I press the "Retrieve" button
-    # Then I should see "Happy" in the "Name" field
-    # And I should see "Hippo" in the "Category" field
-    # And I should see "False" in the "Available" dropdown
-    # And I should see "Male" in the "Gender" dropdown
-    # And I should see "2022-06-16" in the "Birthday" field
