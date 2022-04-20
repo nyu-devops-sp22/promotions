@@ -67,3 +67,38 @@ Scenario: Delete a Promotion
     And the "Product ID" field should be empty
     And the "Type" field should be empty
     And the "Ongoing" field should be empty
+
+Scenario: Retrieve a Promotion
+    When I visit the "Home Page"
+    And I click service
+    And I set the "Name" to "Sales"
+    And I set the "Start Date" to "01-05-2022 00:00:00"
+    And I set the "End Date" to "02-19-2022 00:00:00"
+    And I set the "Value" to "100.0"
+    And I set the "Product ID" to "199"
+    And I select "False" in the "Ongoing" dropdown
+    And I select "Value" in the "Type" dropdown
+    And I press the "Create" button
+    Then I should see the message "Success"
+    When I copy the "Id" field
+    And I press the "Clear" button
+    And I paste the "ID" field
+    And I press the "Retrieve" button
+    Then I should see the message "Success"
+    And I should see "Sales" in the "Name" field
+    And I should see "01-05-2022 00:00:00" in the "Start Date" field
+    And I should see "02-19-2022 00:00:00" in the "End Date" field
+    And I should see "199" in the "Product ID" field
+    And I should see "Value" in the "Type" dropdown
+    And I should see "False" in the "Ongoing" dropdown
+    And I should see "100" in the "Value" field
+    When I copy the "Id" field
+    And I press the "Clear" button
+    And I paste the "ID" field
+    And I press the "Delete" button
+    Then I should see the message "promotion has been Deleted!"
+    And the "ID" field should be empty
+    When I press the "Clear" button
+    And I paste the "ID" field
+    And I press the "Retrieve" button 
+    Then I should not see the message "Success"

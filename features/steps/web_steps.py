@@ -147,6 +147,13 @@ def step_impl(context, message):
     )
     expect(found).to_be(True)
 
+
+@then('I should not see the message "{message}"')
+def step_impl(context, message):
+    element = context.driver.find_element_by_id('flash_message')
+    expect(element.text == message).to_be_falsy()
+
+
 ##################################################################
 # This code works because of the following naming convention:
 # The id field for text input in the html is the element name
