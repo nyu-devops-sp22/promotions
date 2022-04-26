@@ -186,6 +186,7 @@ class PromotionResource(Resource):
             abort(status.HTTP_404_NOT_FOUND, 'Promotion with id [{}] was not found.'.format(promotion_id))
 
         data = api.payload
+        print(data)
         promotion.deserialize(data)
         promotion.update()
         app.logger.info("Promotion with id {} has been updated.".format(promotion_id))
