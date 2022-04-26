@@ -116,6 +116,7 @@ Scenario: Update a Promotion
     And I should see "False" in the "Ongoing" dropdown
     And I should see "10" in the "Value" field
     When I change "Name" to "BiggestDiscount"
+    And I change "Start Date" to "03-20-2020 00:00:00"
     And I press the "Update" button
     Then I should see the message "Success"
     When I copy the "Id" field
@@ -123,7 +124,8 @@ Scenario: Update a Promotion
     And I paste the "Id" field
     And I press the "Retrieve" button
     Then I should see "BiggestDiscount" in the "Name" field
+    And I should see "03-20-2020 00:00:00" in the "Start Date" field
     When I press the "Clear" button
     And I press the "Search" button
     Then I should see "BiggestDiscount" in the results
-    Then I should not see "BigDiscount" in the results
+    And I should not see "BigDiscount" in the results
