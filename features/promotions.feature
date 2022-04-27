@@ -102,3 +102,30 @@ Scenario: Retrieve a Promotion
     And I paste the "ID" field
     And I press the "Retrieve" button 
     Then I should not see the message "Success"
+
+Scenario: Update a Promotion
+    When I visit the "Home Page"
+    And I click service
+    And I set the "Name" to "BigDiscount"
+    And I press the "Search" button
+    Then I should see "BigDiscount" in the "Name" field
+    And I should see "03-15-2020 00:00:00" in the "Start Date" field
+    And I should see "08-15-2020 00:00:00" in the "End Date" field
+    And I should see "20" in the "Product ID" field
+    And I should see "Value" in the "Type" dropdown
+    And I should see "False" in the "Ongoing" dropdown
+    And I should see "10" in the "Value" field
+    When I change "Name" to "BiggestDiscount"
+    And I change "Start Date" to "03-20-2020 00:00:00"
+    And I press the "Update" button
+    Then I should see the message "Success"
+    When I copy the "Id" field
+    And I press the "Clear" button
+    And I paste the "Id" field
+    And I press the "Retrieve" button
+    Then I should see "BiggestDiscount" in the "Name" field
+    And I should see "03-20-2020 00:00:00" in the "Start Date" field
+    When I press the "Clear" button
+    And I press the "Search" button
+    Then I should see "BiggestDiscount" in the results
+    And I should not see "BigDiscount" in the results

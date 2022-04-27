@@ -90,17 +90,21 @@ $(function () {
 
         let promotion_id = $("#promotion_id").val();
         let name = $("#promotion_name").val();
-        let category = $("#promotion_category").val();
-        let available = $("#promotion_available").val() == "true";
-        let gender = $("#promotion_gender").val();
-        let birthday = $("#promotion_birthday").val();
+        let start_date = $("#promotion_start_date").val();
+        let end_date = $("#promotion_end_date").val();
+        let type = $("#promotion_type").val();
+        let ongoing = $("#promotion_ongoing").val() == "true";
+        let product_id = parseInt($("#promotion_product_id").val());
+        let value = parseFloat($("#promotion_value").val());
 
         let data = {
             "name": name,
-            "category": category,
-            "available": available,
-            "gender": gender,
-            "birthday": birthday
+            "start_date": start_date,
+            "end_date": end_date,
+            "type": type,
+            "ongoing": ongoing,
+            "product_id": product_id,
+            "value": value,
         };
 
         $("#flash_message").empty();
