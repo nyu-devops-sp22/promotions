@@ -201,27 +201,11 @@ $(function () {
     $("#search-btn").click(function () {
 
         let name = $("#promotion_name").val();
-        let category = $("#promotion_category").val();
-        let available = $("#promotion_available").val() == "true";
 
         let queryString = ""
 
         if (name) {
             queryString += 'name=' + name
-        }
-        if (category) {
-            if (queryString.length > 0) {
-                queryString += '&category=' + category
-            } else {
-                queryString += 'category=' + category
-            }
-        }
-        if (available) {
-            if (queryString.length > 0) {
-                queryString += '&available=' + available
-            } else {
-                queryString += 'available=' + available
-            }
         }
 
         $("#flash_message").empty();
@@ -240,15 +224,17 @@ $(function () {
             table += '<thead><tr>'
             table += '<th class="col-md-2">ID</th>'
             table += '<th class="col-md-2">Name</th>'
-            table += '<th class="col-md-2">Category</th>'
-            table += '<th class="col-md-2">Available</th>'
-            table += '<th class="col-md-2">Gender</th>'
-            table += '<th class="col-md-2">Birthday</th>'
+            table += '<th class="col-md-2">Start Date</th>'
+            table += '<th class="col-md-2">End Date</th>'
+            table += '<th class="col-md-2">Type</th>'
+            table += '<th class="col-md-2">Value</th>'
+            table += '<th class="col-md-2">Ongoing</th>'
+            table += '<th class="col-md-2">Product ID</th>'
             table += '</tr></thead><tbody>'
             let firstpromotion = "";
             for(let i = 0; i < res.length; i++) {
                 let promotion = res[i];
-                table +=  `<tr id="row_${i}"><td>${promotion._id}</td><td>${promotion.name}</td><td>${promotion.category}</td><td>${promotion.available}</td><td>${promotion.gender}</td><td>${promotion.birthday}</td></tr>`;
+                table +=  `<tr id="row_${i}"><td>${promotion.promotion_id}</td><td>${promotion.name}</td><td>${promotion.start_date}</td><td>${promotion.end_date}</td><td>${promotion.type}</td><td>${promotion.value}</td><td>${promotion.ongoing}</td><td>${promotion.product_id}</td></tr>`;
                 if (i == 0) {
                     firstpromotion = promotion;
                 }
