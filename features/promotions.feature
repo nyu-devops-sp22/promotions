@@ -61,14 +61,15 @@ Scenario: Delete a Promotion
     When I press the "Clear" button
     And I paste the "ID" field
     And I press the "Retrieve" button 
-    Then the "Name" field should be empty
-    And the "ID" field should be empty
+    Then I should not see the message "Success"
+    And the "Name" field should be empty
     And the "Start Date" field should be empty
     And the "End Date" field should be empty
     And the "Value" field should be empty
     And the "Product ID" field should be empty
     And the "Type" field should be empty
     And the "Ongoing" field should be empty
+    And the "ID" field should be empty
 
 Scenario: Retrieve a Promotion
     When I visit the "Home Page"
