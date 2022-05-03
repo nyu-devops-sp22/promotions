@@ -9,6 +9,8 @@ Background:
         | BigDiscount   | 03-15-2020 00:00:00     | 08-15-2020 00:00:00  | VALUE      | 10.0    | False      | 20         |
         | SmallDisCount | 08-19-2021 00:00:00     | 10-19-2021 00:00:00  | PERCENTAGE | 0.3     | False      | 15         |
         | Another       | 01-05-2022 00:00:00     | 05-09-2022 00:00:00  | VALUE      | 20.0    | True       | 19         |
+        | Happy         | 01-24-2022 00:00:00     | 05-09-2022 23:59:59  | VALUE      | 20.22   | True       | 22         |
+        | Demo          | 05-04-2022 17:00:00     | 05-04-2022 20:00:00  | PERCENTAGE | 100.0   | True       | 22         |
 
 Scenario: The server is running
     When I visit the "Home Page"
@@ -130,6 +132,35 @@ Scenario: Update a Promotion
     Then I should see "BiggestDiscount" in the results
     And I should not see "BigDiscount" in the results
 
+Scenario: Query a Promotion by name
+    When I visit the "Home Page"
+    And I click service
+    And I set the "Name" to "Happy"
+    And I press the "Search" button
+    Then I should see "Happy" in the results
+    And I should not see "BigDiscount" in the results
+
+Scenario: Query a Promotion by Product ID
+    When I visit the "Home Page"
+    And I click service
+    And I set the "Product ID" to "22"
+    And I press the "Search" button
+    Then I should not see "BigDiscount" in the results
+    And I should not see "Another" in the results
+    And I should see "Happy" in the results
+    And I should see "Demo" in the results
+
+Scenario: Query a Promotion by Start Date
+    When I visit the "Home Page"
+    And I click service
+    And I set the "Start Date" to "01-24-2022 00:00:00"
+    And I press the "Search" button
+    Then I should not see "Demo" in the results
+    And I should not see "Another" in the results
+    And I should see "Happy" in the results
+    And I should not see "BigDiscount" in the results
+    And I should not see "SmallDisCount" in the results
+    
 Scenario: Invalidate a Promotion
     When I visit the "Home Page"
     And I click service
@@ -158,3 +189,4 @@ Scenario: Invalidate a Promotion
     And I press the "Retrieve" button 
     Then I should see "SmallDiscount" in the "Name" field
     And I should see "False" in the "Ongoing" dropdown
+
