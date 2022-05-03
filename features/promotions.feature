@@ -161,3 +161,32 @@ Scenario: Query a Promotion by Start Date
     And I should not see "BigDiscount" in the results
     And I should not see "SmallDisCount" in the results
     
+Scenario: Invalidate a Promotion
+    When I visit the "Home Page"
+    And I click service
+    And I set the "Name" to "SmallDiscount"
+    And I set the "Start Date" to "01-09-2022 00:00:00"
+    And I set the "End Date" to "03-29-2022 00:00:00"
+    And I set the "Value" to "200.0"
+    And I set the "Product ID" to "399"
+    And I select "True" in the "Ongoing" dropdown
+    And I select "Value" in the "Type" dropdown
+    And I press the "Create" button
+    Then I should see the message "Success"
+    When I copy the "Id" field
+    And I press the "Clear" button
+    And I paste the "ID" field
+    And I press the "Retrieve" button
+    Then I should see "SmallDiscount" in the "Name" field
+    And I should see "True" in the "Ongoing" dropdown
+    When I press the "Clear" button
+    And I paste the "ID" field
+    And I press the "Invalidate" button
+    Then I should see the message "promotion has been Invalidated!"
+    And the "ID" field should be empty
+    When I press the "Clear" button
+    And I paste the "ID" field
+    And I press the "Retrieve" button 
+    Then I should see "SmallDiscount" in the "Name" field
+    And I should see "False" in the "Ongoing" dropdown
+

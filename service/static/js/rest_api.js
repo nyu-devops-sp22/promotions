@@ -185,6 +185,31 @@ $(function () {
     });
 
     // ****************************************
+    // Invalidate a promotion
+    // ****************************************
+    $("#invalidate-btn").click(function() {
+        let promotion_id = $("#promotion_id").val();
+
+        $("#flash_message").empty();
+
+        let ajax = $.ajax({
+            type: "PUT",
+            url: `/promotions/${promotion_id}/invalidate`,
+            contentType: "application/json",
+            data: '',
+        });
+
+        ajax.done(function(res) {
+            clear_form_data();
+            flash_message("promotion has been Invalidated!");
+        });
+
+        ajax.fail(function(res) {
+            flash_message("Server error!");
+        });
+    });
+
+    // ****************************************
     // Clear the form
     // ****************************************
 
