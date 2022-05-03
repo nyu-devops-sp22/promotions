@@ -264,10 +264,10 @@ $(function () {
             table += '<th class="col-md-2">Name</th>'
             table += '<th class="col-md-2">Start Date</th>'
             table += '<th class="col-md-2">End Date</th>'
-            table += '<th class="col-md-2">Type</th>'
-            table += '<th class="col-md-2">Value</th>'
-            table += '<th class="col-md-2">Ongoing</th>'
-            table += '<th class="col-md-2">Product ID</th>'
+            table += '<th class="col-md-1">Type</th>'
+            table += '<th class="col-md-1">Value</th>'
+            table += '<th class="col-md-1">Ongoing</th>'
+            table += '<th class="col-md-4">Product ID</th>'
             table += '</tr></thead><tbody>'
             let firstpromotion = "";
             for(let i = 0; i < res.length; i++) {
@@ -293,5 +293,49 @@ $(function () {
         });
 
     });
+
+    // ****************************************
+    // List promotions
+    // ****************************************
+
+    $("#list-btn").click(function () {
+
+        $("#flash_message").empty();
+
+        let ajax = $.ajax({
+                type: "GET",
+                url: `/promotions`,
+                contentType: "application/json",
+            })
+
+        ajax.done(function(res){
+            $("#search_results").empty();
+            let table = '<table class="table table-striped" cellpadding="10">'
+            table += '<thead><tr>'
+            table += '<th class="col-md-2">ID</th>'
+            table += '<th class="col-md-2">Name</th>'
+            table += '<th class="col-md-2">Start Date</th>'
+            table += '<th class="col-md-2">End Date</th>'
+            table += '<th class="col-md-1">Type</th>'
+            table += '<th class="col-md-1">Value</th>'
+            table += '<th class="col-md-1">Ongoing</th>'
+            table += '<th class="col-md-4">Product ID</th>'
+            table += '</tr></thead><tbody>'
+            for(let i = 0; i < res.length; i++) {
+                let promotion = res[i];
+                table +=  `<tr id="row_${i}"><td>${promotion.id}</td><td>${promotion.name}</td><td>${promotion.start_date}</td><td>${promotion.end_date}</td><td>${promotion.type}</td><td>${promotion.value}</td><td>${promotion.ongoing}</td><td>${promotion.product_id}</td></tr>`;
+            }
+            table += '</tbody></table>';
+            $("#search_results").append(table);
+
+            flash_message("Success, " + res.length + " promotions found")
+        });
+
+        ajax.fail(function(res){
+            flash_message(res.responseJSON.message)
+        });
+
+    });
+
 
 })

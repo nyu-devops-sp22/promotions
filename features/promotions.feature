@@ -191,3 +191,8 @@ Scenario: Invalidate a Promotion
     Then I should see "SmallDiscount" in the "Name" field
     And I should see "False" in the "Ongoing" dropdown
 
+Scenario: List all promotions 
+    When I visit the "Home Page"
+    And I click service
+    And I press the "List" button
+    Then I should see the message "Success, 5 promotions found"
