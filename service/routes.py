@@ -139,7 +139,7 @@ class PromotionResource(Resource):
         app.logger.info("Request for promotion with id: %s", promotion_id)
         promotion = Promotion.find(promotion_id)
         if not promotion:
-            abort(status.HTTP_404_NOT_FOUND, 'Promotion with id [{}] was not found.'.format(promotion_id))
+            abort(status.HTTP_404_NOT_FOUND, 'Promotion not found.')
 
         app.logger.info("Returning promotion: %s", promotion.name)
         return promotion.serialize(), status.HTTP_200_OK
@@ -183,7 +183,7 @@ class PromotionResource(Resource):
 
         promotion: Promotion = Promotion.find(promotion_id)
         if not promotion:
-            abort(status.HTTP_404_NOT_FOUND, 'Promotion with id [{}] was not found.'.format(promotion_id))
+            abort(status.HTTP_404_NOT_FOUND, 'Promotion not found.')
 
         data = api.payload
         promotion.deserialize(data)
@@ -210,7 +210,7 @@ class InvalidateResource(Resource):
         app.logger.info("Invalidate promotion id: %d", promotion_id)
         promotion: Promotion = Promotion.find(promotion_id)
         if not promotion:
-            abort(status.HTTP_404_NOT_FOUND, 'Promotion with id [{}] was not found.'.format(promotion_id))
+            abort(status.HTTP_404_NOT_FOUND, 'Promotion not found.')
         promotion.ongoing = False
         promotion.update()
         app.logger.info("Promotion with id {} has been invalidated.".format(promotion_id))

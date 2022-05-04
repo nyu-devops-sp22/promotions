@@ -61,7 +61,7 @@ Scenario: Delete a Promotion
     When I press the "Clear" button
     And I paste the "ID" field
     And I press the "Retrieve" button 
-    Then the "ID" field should be empty
+    Then I should see the message "Promotion not found."
     And the "Name" field should be empty
     And the "Start Date" field should be empty
     And the "End Date" field should be empty
@@ -69,6 +69,7 @@ Scenario: Delete a Promotion
     And the "Product ID" field should be empty
     And the "Type" field should be empty
     And the "Ongoing" field should be empty
+    And the "ID" field should be empty
 
 Scenario: Retrieve a Promotion
     When I visit the "Home Page"
@@ -103,7 +104,7 @@ Scenario: Retrieve a Promotion
     When I press the "Clear" button
     And I paste the "ID" field
     And I press the "Retrieve" button 
-    Then I should not see the message "Success"
+    Then I should see the message "Promotion not found."
 
 Scenario: Update a Promotion
     When I visit the "Home Page"
