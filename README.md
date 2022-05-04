@@ -30,13 +30,14 @@ $ nosetests
 
 ## Running Services
 
-To start service, run ```flask run``` in terminal:
+To start service, run ```honcho start``` in terminal:
 
 ```shell
-$ flask run
+$ honcho start
 ```
 
 You should be able to reach the service at: http://127.0.0.1:8000.
+You can access web UI and documentation via links on the homepage.
 
 ### Promotion Routes
 
