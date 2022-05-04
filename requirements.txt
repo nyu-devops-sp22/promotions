@@ -25,7 +25,6 @@ httpie==2.3.0
 
 # Behavior Driven Development
 behave==1.2.6
-# selenium==3.141.0
 selenium==4.1.0
 compare==0.2b0
 requests==2.27.1
