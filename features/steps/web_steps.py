@@ -150,7 +150,10 @@ def step_impl(context, message):
 
 @then('I should not see the message "{message}"')
 def step_impl(context, message):
-    element = context.driver.find_element_by_id('flash_message')
+    element = WebDriverWait(context.driver, context.WAIT_SECONDS).until(
+        expected_conditions.presence_of_element_located((By.ID, 'flash_message')
+        )
+    )
     expect(element.text == message).to_be_falsy()
 
 
